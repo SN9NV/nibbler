@@ -1,33 +1,26 @@
-#include <ncurses.h>
+#include <thread>
+
 #include "Snake.hpp"
+#include "Display.hpp"
+#include "NCurses.hpp"
 
 const unsigned	windowWidth = 128;
 const unsigned	windowHeight = 64;
 
-void	initGame();
-void	exitGame();
-void	gameLoop();
-
 int main() {
+	Snake	snake(windowWidth, windowHeight);
+	Display	*display = new NCurses(windowHeight, windowWidth);
 
+	while (true) {
+		snake.setDirection(display->getDirection());
 
+		if (snake.update())
+			break;
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+
+	delete display;
 
 	return 0;
-}
-
-void	initGame() {
-	initscr();
-	raw();
-	nodelay(stdscr, true);
-	keypad(stdscr, true);
-	noecho();
-	curs_set(false);
-}
-
-void	exitGame() {
-	endwin();
-}
-
-void	gameLoop() {
-	Snake	snake(windowWidth, windowHeight);
 }
