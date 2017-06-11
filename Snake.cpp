@@ -6,7 +6,7 @@ Snake::Snake(const Snake &src) {
 	*this = src;
 }
 
-Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window({windowHeight, windowWidth}) {
+Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window(windowWidth, windowHeight) {
 	unsigned w = windowWidth / 2;
 	unsigned h = windowHeight / 2;
 
@@ -37,7 +37,7 @@ bool Snake::update() {
 
 	Snake::Point head = this->_getNewHeadPos();
 
-	if (head.x == 0 || head.y == 0 || head.x == this->_window.x || head.y == this->_window.y)
+	if (/*head.x == 0 || head.y == 0 || */head.x >= this->_window.x || head.y >= this->_window.y)
 		return true;
 
 	for (auto &piece : this->_pieces) {
@@ -51,8 +51,8 @@ bool Snake::update() {
 	return false;
 }
 
-Point Snake::_getNewHeadPos() {
-	Point	newHead = this->_pieces[0];
+Snake::Point Snake::_getNewHeadPos() {
+	Snake::Point	newHead = this->_pieces[0];
 
 	switch (this->_direction) {
 		case Snake::Direction::UP:
@@ -68,10 +68,6 @@ Point Snake::_getNewHeadPos() {
 			newHead.x++;
 			return newHead;
 	}
-}
-
-std::deque::size_type Snake::size() {
-	return this->_pieces.size();
 }
 
 void Snake::setDirection(Snake::Direction direction) {
@@ -95,10 +91,22 @@ void Snake::setDirection(Snake::Direction direction) {
 	 * Illegal moves % 2 == 0; so only change direction if new direction is odd
 	 */
 
-	if (direction != Snake::Direction::NONE && this->_direction + direction % 2)
+	if (direction != Snake::Direction::NONE && (this->_direction + direction) % 2)
 		this->_direction = direction;
 }
 
-void Snake::setFood(unsigned food, bool inc) {
-	this->_foodLeft = inc ? this->_foodLeft + food : food;
+void Snake::eatFood(unsigned food){
+	this->_foodLeft += food;
+}
+
+const std::deque<Snake::Point>& Snake::getPieces() const {
+	return this->_pieces;
+}
+
+const Snake::Point& Snake::getHead() const {
+	return this->_pieces[0];
+}
+
+Snake::Direction Snake::getDirection() const {
+	return this->_direction;
 }

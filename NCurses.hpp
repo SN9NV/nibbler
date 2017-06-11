@@ -6,14 +6,16 @@
 
 class NCurses : public Display {
 public:
-	NCurses(unsigned windowHeight, unsigned windowWidth);
+	NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake);
 	virtual ~NCurses();
 
 	Snake::Direction	getDirection();
-	void				update();
+	void				draw(unsigned tick);
+	Display::Key		getKey();
 
-	static enum Key {
+	enum Key {
 		NONE	= 0,
+		P		= 112,
 		Q		= 113,
 		X		= 120,
 		DOWN	= 258,
@@ -23,11 +25,14 @@ public:
 	};
 
 private:
-	NCurses() {};
-	NCurses(const NCurses &src) {};
-	NCurses &operator=(const NCurses &rhs) {};
+	NCurses() = delete;
+	NCurses(const NCurses &src) = delete;
+	NCurses &operator=(const NCurses &rhs) = delete;
+
+	void			_drawSnake();
 
 	NCurses::Key	_key;
+	Snake			&_snake;
 };
 
 

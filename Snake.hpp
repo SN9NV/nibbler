@@ -5,14 +5,15 @@
 
 class Snake {
 public:
-	struct Point {
+	struct	Point {
 		unsigned	x;
 		unsigned	y;
 
 		Point() {};
+		//Point(const Point &src) : x(src.x), y(src.y) {};
 		Point(unsigned x, unsigned y) : x(x), y(y) {};
 
-		bool operator==(Point &p2) {
+		bool operator==(const Snake::Point &p2) const {
 			return (this->x == p2.x && this->y == p2.y);
 		}
 	};
@@ -32,20 +33,22 @@ public:
 
 	Snake &operator=(const Snake &rhs);
 
-	bool					update();
-	void					setDirection(Snake::Direction direction);
-	std::deque::size_type	size();
-	void 					setFood(unsigned food, bool inc = false);
+	bool							update();
+	void							setDirection(Snake::Direction direction);
+	const std::deque<Snake::Point>	&getPieces() const;
+	const Snake::Point				&getHead() const;
+	Snake::Direction				getDirection() const;
+	void 							eatFood(unsigned food);
 
 private:
 	Snake();
 
-	std::deque<Point>	_pieces;
-	Snake::Direction	_direction;
-	unsigned			_foodLeft;
-	Point				_window;
+	std::deque<Snake::Point>	_pieces;
+	Snake::Direction			_direction;
+	unsigned					_foodLeft;
+	Point						_window;
 
-	Snake::Point		_getNewHeadPos();
+	Snake::Point				_getNewHeadPos();
 };
 
 

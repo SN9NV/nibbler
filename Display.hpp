@@ -6,17 +6,28 @@
 
 class Display {
 public:
-	virtual Display(unsigned windowHeight, unsigned windowWidth) = 0;
+	Display() {};
+	Display(const Display &src) = delete;
+	Display &operator=(const Display &rhs) = delete;
+	Display(unsigned windowHeight, unsigned windowWidth) : _height(windowHeight), _width(windowWidth) {};
 	virtual ~Display() {};
 
-	virtual void				update() = 0;
+	enum Key {
+		NONE,
+		P,
+		Q,
+		X,
+		DOWN,
+		UP,
+		LEFT,
+		RIGHT,
+	};
+
+	virtual void				draw(unsigned tick) = 0;
 	virtual Snake::Direction	getDirection() = 0;
+	virtual Display::Key		getKey() = 0;
 
 protected:
-	Display() {};
-	Display(const Display &src) {};
-	Display &operator=(const Display &rhs) {};
-
 	unsigned	_height;
 	unsigned	_width;
 };
