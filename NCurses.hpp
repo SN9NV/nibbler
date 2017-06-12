@@ -6,7 +6,7 @@
 
 class NCurses : public Display {
 public:
-	NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake);
+	NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
 	virtual ~NCurses();
 
 	Snake::Direction	getDirection();
@@ -30,9 +30,12 @@ private:
 	NCurses &operator=(const NCurses &rhs) = delete;
 
 	void			_drawSnake();
+	void			_drawWalls();
+	void			_drawFood();
 
 	NCurses::Key	_key;
 	Snake			&_snake;
+	Food			&_food;
 };
 
 

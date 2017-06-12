@@ -10,7 +10,6 @@ public:
 		unsigned	y;
 
 		Point() {};
-		//Point(const Point &src) : x(src.x), y(src.y) {};
 		Point(unsigned x, unsigned y) : x(x), y(y) {};
 
 		bool operator==(const Snake::Point &p2) const {
@@ -51,5 +50,13 @@ private:
 	Snake::Point				_getNewHeadPos();
 };
 
+struct	Food {
+	unsigned		value;
+	Snake::Point	pos;
+	int				life;
+
+	Food() {}
+	Food(unsigned value, Snake::Point point, int life) : value(value), pos(point), life(life) {}
+};
 
 #endif //NIBBLER_MAIN_SNAKE_HPP

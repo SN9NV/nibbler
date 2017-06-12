@@ -1,8 +1,10 @@
+#include <iostream>
 #include "NCurses.hpp"
 
-NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake) :
+NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
 		_key(NCurses::Key::NONE),
-		_snake(snake) {
+		_snake(snake),
+		_food(food) {
 	this->_height = windowHeight;
 	this->_width = windowWidth;
 
@@ -13,6 +15,12 @@ NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake) :
 	keypad(stdscr, true);
 	noecho();
 	curs_set(false);
+
+	start_color();
+	init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
+	init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+	init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
 }
 
 NCurses::~NCurses() {
@@ -41,11 +49,13 @@ void NCurses::draw(unsigned tick) {
 	clear();
 	mvprintw(y - 1, 0, "%8d", tick);
 
-	if (static_cast<unsigned>(y) < this->_height || static_cast<unsigned>(x) < this->_width) {
-		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_height, this->_width);
+	if (static_cast<unsigned>(y) < this->_height || static_cast<unsigned>(x) < this->_width * 2) {
+		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_height, this->_width * 2);
 		mvprintw(y - 1, x - 7, "%3d %3d", x, y);
 	} else {
+		this->_drawWalls();
 		this->_drawSnake();
+		this->_drawFood();
 	}
 
 	refresh();
@@ -80,29 +90,44 @@ Display::Key NCurses::getKey() {
 	}
 }
 
+void	drawPixel(unsigned y, unsigned x, chtype print) {
+	mvaddch(y, x * 2, print);
+	mvaddch(y, x * 2 + 1, print);
+}
+
 void NCurses::_drawSnake() {
 	auto pieces = this->_snake.getPieces();
 	auto it = pieces.begin();
 
-	chtype c = 0;
+	attron(COLOR_PAIR(COLOR_RED));
+	drawPixel(it->y, it->x, ACS_CKBOARD);
+	attroff(COLOR_PAIR(COLOR_RED));
+	it++;
 
-	switch(this->_snake.getDirection()) {
-		case Snake::Direction::UP:
-			c = ACS_TTEE;
-			break;
-		case Snake::Direction::LEFT:
-			c = ACS_LTEE;
-			break;
-		case Snake::Direction::DOWN:
-			c = ACS_BTEE;
-			break;
-		default:
-			c = ACS_RTEE;
+	attron(COLOR_PAIR(COLOR_YELLOW));
+	for (;it != pieces.end(); it++) {
+		drawPixel(it->y, it->x, ACS_CKBOARD);
+	}
+	attroff(COLOR_PAIR(COLOR_YELLOW));
+}
+
+void NCurses::_drawWalls() {
+	attron(COLOR_PAIR(COLOR_BLUE));
+	for (unsigned i = 0; i <= this->_width; i++) {
+		drawPixel(0, i, ACS_CKBOARD);
+		drawPixel(this->_height, i, ACS_CKBOARD);
 	}
 
-	mvaddch((*it).y, (*it++).x, c);
-
-	while (it != pieces.end()) {
-		mvaddch((*it).y, (*it++).x, ACS_CKBOARD + (it - pieces.begin()));
+	for (unsigned i = 0; i < this->_height; i++) {
+		drawPixel(i, 0, ACS_CKBOARD);
+		drawPixel(i, this->_width, ACS_CKBOARD);
 	}
+	attroff(COLOR_PAIR(COLOR_BLUE));
+}
+
+void NCurses::_drawFood() {
+	attron(COLOR_PAIR(COLOR_MAGENTA));
+	mvaddch(this->_food.pos.y, this->_food.pos.x * 2, 'O');
+	mvaddch(this->_food.pos.y, this->_food.pos.x * 2 + 1, '~');
+	attroff(COLOR_PAIR(COLOR_MAGENTA));
 }

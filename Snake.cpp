@@ -10,11 +10,10 @@ Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window(windowWidth,
 	unsigned w = windowWidth / 2;
 	unsigned h = windowHeight / 2;
 
-	for (unsigned i = 5; i; i--) {
-		this->_pieces.push_back({w--, h});
-	}
+	this->_pieces.push_back({w, h});
 
 	this->_direction = Snake::Direction::RIGHT;
+	this->_foodLeft = 4;
 }
 
 Snake::~Snake() {}
@@ -37,7 +36,7 @@ bool Snake::update() {
 
 	Snake::Point head = this->_getNewHeadPos();
 
-	if (/*head.x == 0 || head.y == 0 || */head.x >= this->_window.x || head.y >= this->_window.y)
+	if (head.x == 0 || head.y == 0 || head.x >= this->_window.x || head.y >= this->_window.y)
 		return true;
 
 	for (auto &piece : this->_pieces) {
@@ -57,17 +56,19 @@ Snake::Point Snake::_getNewHeadPos() {
 	switch (this->_direction) {
 		case Snake::Direction::UP:
 			newHead.y--;
-			return newHead;
+			break;
 		case Snake::Direction::DOWN:
 			newHead.y++;
-			return newHead;
+			break;
 		case Snake::Direction::LEFT:
 			newHead.x--;
-			return newHead;
+			break;
 		default: // Snake::Direction::RIGHT
 			newHead.x++;
-			return newHead;
+			break;
 	}
+
+	return newHead;
 }
 
 void Snake::setDirection(Snake::Direction direction) {

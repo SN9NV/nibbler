@@ -1,8 +1,8 @@
 #ifndef NIBBLER_MAIN_DISPLAY_HPP
 #define NIBBLER_MAIN_DISPLAY_HPP
 
-
 #include "Snake.hpp"
+#include <queue>
 
 class Display {
 public:
@@ -28,8 +28,9 @@ public:
 	virtual Display::Key		getKey() = 0;
 
 protected:
-	unsigned	_height;
-	unsigned	_width;
+	unsigned		_height;
+	unsigned		_width;
+	std::queue<Key>	_keyBuff;
 };
 
 
