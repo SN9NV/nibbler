@@ -25,12 +25,8 @@ public:
 		LEFT
 	};
 
-
-	Snake(const Snake &src);
 	Snake(unsigned windowWidth, unsigned windowHeight);
-	~Snake();
-
-	Snake &operator=(const Snake &rhs);
+	virtual ~Snake();
 
 	bool							update();
 	void							setDirection(Snake::Direction direction);
@@ -40,14 +36,16 @@ public:
 	void 							eatFood(unsigned food);
 
 private:
-	Snake();
+	Snake() = delete;
+	Snake(const Snake &src) = delete;
+	Snake &operator=(const Snake &rhs) = delete;
+
+	Snake::Point				_getNewHeadPos();
 
 	std::deque<Snake::Point>	_pieces;
 	Snake::Direction			_direction;
 	unsigned					_foodLeft;
 	Point						_window;
-
-	Snake::Point				_getNewHeadPos();
 };
 
 struct	Food {
@@ -55,7 +53,6 @@ struct	Food {
 	Snake::Point	pos;
 	int				life;
 
-	Food() {}
 	Food(unsigned value, Snake::Point point, int life) : value(value), pos(point), life(life) {}
 };
 

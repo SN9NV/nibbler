@@ -2,12 +2,7 @@
 #include "NCurses.hpp"
 
 NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
-		_key(NCurses::Key::NONE),
-		_snake(snake),
-		_food(food) {
-	this->_height = windowHeight;
-	this->_width = windowWidth;
-
+		Display(windowHeight, windowWidth, snake, food) {
 	initscr();
 	//raw();
 	cbreak();
@@ -25,21 +20,6 @@ NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food
 
 NCurses::~NCurses() {
 	endwin();
-}
-
-Snake::Direction NCurses::getDirection() {
-	switch (this->_key) {
-		case NCurses::Key::UP:
-			return Snake::Direction::UP;
-		case NCurses::Key::LEFT:
-			return Snake::Direction::LEFT;
-		case NCurses::Key::DOWN:
-			return Snake::Direction::DOWN;
-		case NCurses::Key::RIGHT:
-			return Snake::Direction::RIGHT;
-		default:
-			return Snake::Direction::NONE;
-	}
 }
 
 void NCurses::draw(unsigned tick) {
@@ -64,28 +44,24 @@ void NCurses::draw(unsigned tick) {
 Display::Key NCurses::getKey() {
 	switch(getch()) {
 		case NCurses::Key::P:
-			this->_key = NCurses::Key::P;
 			return Display::Key::P;
 		case NCurses::Key::Q:
-			this->_key = NCurses::Key::Q;
 			return Display::Key::Q;
 		case NCurses::Key::X:
-			this->_key = NCurses::Key::X;
 			return Display::Key::X;
 		case NCurses::Key::UP:
-			this->_key = NCurses::Key::UP;
+			this->_keyBuff.push(Display::Key::UP);
 			return Display::Key::UP;
 		case NCurses::Key::LEFT:
-			this->_key = NCurses::Key::LEFT;
+			this->_keyBuff.push(Display::Key::LEFT);
 			return Display::Key::LEFT;
 		case NCurses::Key::DOWN:
-			this->_key = NCurses::Key::DOWN;
+			this->_keyBuff.push(Display::Key::DOWN);
 			return Display::Key::DOWN;
 		case NCurses::Key::RIGHT:
-			this->_key = NCurses::Key::RIGHT;
+			this->_keyBuff.push(Display::Key::RIGHT);
 			return Display::Key::RIGHT;
 		default:
-			this->_key = NCurses::Key::NONE;
 			return Display::Key::NONE;
 	}
 }
@@ -130,4 +106,13 @@ void NCurses::_drawFood() {
 	mvaddch(this->_food.pos.y, this->_food.pos.x * 2, 'O');
 	mvaddch(this->_food.pos.y, this->_food.pos.x * 2 + 1, '~');
 	attroff(COLOR_PAIR(COLOR_MAGENTA));
+}
+
+Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food) {
+	return new NCurses(windowHeight, windowWidth, *snake, *food);
+}
+
+void		destroyDisplay(Display *display) {
+	if (display != nullptr)
+	delete display;
 }

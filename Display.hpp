@@ -6,11 +6,8 @@
 
 class Display {
 public:
-	Display() {};
-	Display(const Display &src) = delete;
-	Display &operator=(const Display &rhs) = delete;
-	Display(unsigned windowHeight, unsigned windowWidth) : _height(windowHeight), _width(windowWidth) {};
-	virtual ~Display() {};
+	Display(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
+	virtual ~Display();
 
 	enum Key {
 		NONE,
@@ -21,17 +18,33 @@ public:
 		UP,
 		LEFT,
 		RIGHT,
+		QUIT
 	};
 
 	virtual void				draw(unsigned tick) = 0;
-	virtual Snake::Direction	getDirection() = 0;
 	virtual Display::Key		getKey() = 0;
 
+	Snake::Direction			getInstruction();
+	std::queue<Display::Key>	&getKeyBuff();
+
 protected:
-	unsigned		_height;
-	unsigned		_width;
-	std::queue<Key>	_keyBuff;
+	unsigned					_height;
+	unsigned					_width;
+	std::queue<Display::Key>	_keyBuff;
+
+	Snake						&_snake;
+	Food						&_food;
+
+private:
+	Display() = delete;
+	Display(const Display &src) = delete;
+	Display &operator=(const Display &rhs) = delete;
 };
+
+extern "C" {
+	Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food);
+	void		destroyDisplay(Display *display);
+}
 
 
 #endif //NIBBLER_MAIN_DISPLAY_HPP

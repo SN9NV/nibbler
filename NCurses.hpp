@@ -9,7 +9,6 @@ public:
 	NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
 	virtual ~NCurses();
 
-	Snake::Direction	getDirection();
 	void				draw(unsigned tick);
 	Display::Key		getKey();
 
@@ -32,11 +31,12 @@ private:
 	void			_drawSnake();
 	void			_drawWalls();
 	void			_drawFood();
-
-	NCurses::Key	_key;
-	Snake			&_snake;
-	Food			&_food;
 };
+
+extern "C" {
+	Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food);
+	void		destroyDisplay(Display *display);
+}
 
 
 #endif //NIBBLER_MAIN_NCURSES_HPP

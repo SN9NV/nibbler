@@ -1,11 +1,5 @@
 #include "Snake.hpp"
 
-Snake::Snake() {}
-
-Snake::Snake(const Snake &src) {
-	*this = src;
-}
-
 Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window(windowWidth, windowHeight) {
 	unsigned w = windowWidth / 2;
 	unsigned h = windowHeight / 2;
@@ -17,15 +11,6 @@ Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window(windowWidth,
 }
 
 Snake::~Snake() {}
-
-Snake& Snake::operator=(const Snake &rhs) {
-	this->_window = rhs._window;
-	this->_pieces = rhs._pieces;
-	this->_foodLeft = rhs._foodLeft;
-	this->_direction = rhs._direction;
-
-	return *this;
-}
 
 bool Snake::update() {
 	// If food value is 0, delete last block
