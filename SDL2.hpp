@@ -2,7 +2,7 @@
 #define NIBBLER_MAIN_SDL2_HPP
 
 #include "Display.hpp"
-#include <SDL2.h>
+#include "SDL2.h"
 
 const unsigned	SDL_PIXEL_MULTIPLIER = 8;
 
