@@ -4,7 +4,7 @@
 #include "Display.hpp"
 #include "SDL.h"
 
-const unsigned	SDL_PIXEL_MULTIPLIER = 8;
+const unsigned	SDL_PIXEL_MULTIPLIER = 16;
 
 class SDL2 : public Display {
 public:

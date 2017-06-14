@@ -116,8 +116,8 @@ void SDL2::_drawWalls() {
 
 	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::WHITE.R, SDL2::Colours::WHITE.G, SDL2::Colours::WHITE.B, SDL2::Colours::WHITE.A);
 	SDL_Rect	background = {SDL_PIXEL_MULTIPLIER, SDL_PIXEL_MULTIPLIER,
-							  static_cast<int>(this->_width - SDL_PIXEL_MULTIPLIER),
-							  static_cast<int>(this->_height - SDL_PIXEL_MULTIPLIER)};
+							  static_cast<int>(this->_width * SDL_PIXEL_MULTIPLIER - SDL_PIXEL_MULTIPLIER),
+							  static_cast<int>(this->_height * SDL_PIXEL_MULTIPLIER - SDL_PIXEL_MULTIPLIER)};
 	SDL_RenderFillRect(this->_renderer, &background);
 }
 
