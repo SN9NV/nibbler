@@ -2,7 +2,7 @@
 #define NIBBLER_MAIN_SDL2_HPP
 
 #include "Display.hpp"
-#include "SDL2.h"
+#include "SDL.h"
 
 const unsigned	SDL_PIXEL_MULTIPLIER = 8;
 
@@ -14,17 +14,6 @@ public:
 	void				draw(unsigned tick);
 	Display::Key		getKey();
 
-	enum Key {
-		NONE	= 0,
-		P		= 112,
-		Q		= 113,
-		X		= 120,
-		DOWN	= 258,
-		UP		= 259,
-		LEFT	= 260,
-		RIGHT	= 261
-	};
-
 	struct Colour {
 		unsigned char	R;
 		unsigned char	G;
@@ -32,13 +21,13 @@ public:
 		unsigned char	A;
 	};
 
-	struct Colours {
-		SDL2::Colour	WHITE = {0x00, 0x00, 0x00, 0xFF};
-		SDL2::Colour	RED = {0xFF, 0x00, 0x00, 0xFF};
-		SDL2::Colour	BLUE = {0x00, 0x00, 0xFF, 0xFF};
-		SDL2::Colour	YELLOW = {0xFF, 0xFF, 0x00, 0xFF};
-		SDL2::Colour	MAGENTA = {0x8B, 0x00, 0x8B, 0xFF};
-	};
+	typedef struct Colours {
+		static constexpr SDL2::Colour	WHITE = {0x00, 0x00, 0x00, 0xFF};
+		static constexpr SDL2::Colour	RED = {0xFF, 0x00, 0x00, 0xFF};
+		static constexpr SDL2::Colour	BLUE = {0x00, 0x00, 0xFF, 0xFF};
+		static constexpr SDL2::Colour	YELLOW = {0xFF, 0xFF, 0x00, 0xFF};
+		static constexpr SDL2::Colour	MAGENTA = {0x8B, 0x00, 0x8B, 0xFF};
+	} Colours;
 
 private:
 	SDL2() = delete;
