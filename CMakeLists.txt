@@ -9,14 +9,6 @@ INCLUDE(FindPkgConfig)
 
 PKG_SEARCH_MODULE(SDL2 REQUIRED SDL2)
 
-#[[if(UNIX)
-	if (APPLE)
-		set(SDL2_INCLUDES "$ENV{HOME}/.brew/include/SDL2")
-		set(SDL2_LIBRARIES "-L$ENV{HOME}/.brew/lib -lSDL2")
-	else()
-	endif()
-endif()]]
-
 include_directories(${CURSES_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS})
 link_directories(${SDL2_LIBRARY_DIRS})
 
