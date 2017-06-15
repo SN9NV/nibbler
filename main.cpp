@@ -3,6 +3,7 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <dlfcn.h>
 
 #include "Snake.hpp"
 #include "Display.hpp"
@@ -18,15 +19,36 @@ void    checkArgv(int argc, char **argv, std::list<std::string> & libFiles, int 
 		else if (strcmp(argv[i], "--lib") == 0)
 			libFiles.push_back(std::string(argv[++i]));
 	}
+	if (libFiles.empty())
+		libFiles.push_back("libCurses.so");
+}
+
+void    loadSharedLibs(std::list<std::string> & libFiles, std::list<void *> & libHandles)
+{
+	for (std::list<std::string>::iterator it = libFiles.begin(); it != libFiles.end(); ++it){
+		std::size_t ext = (it)->find_last_of(".");
+		if (strcmp((it)->substr(ext).c_str(), ".so") != 0){
+			std::cerr << "Error: lib should have a .so extension" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		void* dl_handle = dlopen((it)->c_str(), RTLD_LAZY | RTLD_LOCAL);
+		if (!dl_handle){
+			std::cerr << "Error: " << dlerror() << std::endl;
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
 int     main(int argc, char **argv) {
-	std::list<std::string>   libFiles;
-	int                 foodValue = 1;
+	std::list<std::string>  libFiles;
+	std::list<void *>       libHandles;
+	int                     foodValue = 1;
 
 	checkArgv(argc, argv, libFiles, foodValue);
 	std::cout << "lib files size: " << libFiles.size() << std::endl;
 	std::cout << "food value: " << foodValue << std::endl;
+
+	loadSharedLibs(libFiles, libHandles);
 	return 0;
 }
 
