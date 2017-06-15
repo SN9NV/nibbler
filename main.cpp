@@ -1,7 +1,7 @@
 #include <thread>
 #include <random>
 #include <iostream>
-#include <list>
+#include <vector>
 #include <string>
 #include <dlfcn.h>
 
@@ -11,11 +11,11 @@
 const unsigned	windowWidth = 32;
 const unsigned	windowHeight = 32;
 
-void    checkArgv(int argc, char **argv, std::list<std::string> & libFiles, int & foodValue)
+void    checkArgv(int argc, char **argv, std::vector<std::string> & libFiles, unsigned int & foodValue)
 {
 	for(int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "--food-value") == 0)
-			foodValue = atoi(argv[++i]);
+			foodValue = (unsigned int)atoi(argv[++i]);
 		else if (strcmp(argv[i], "--lib") == 0)
 			libFiles.push_back(std::string(argv[++i]));
 	}
@@ -23,9 +23,9 @@ void    checkArgv(int argc, char **argv, std::list<std::string> & libFiles, int 
 		libFiles.push_back("libCurses.so");
 }
 
-void    loadSharedLibs(std::list<std::string> & libFiles, std::list<void *> & libHandles)
+void    loadSharedLibs(std::vector<std::string> & libFiles, std::vector<void *> & libHandles)
 {
-	for (std::list<std::string>::iterator it = libFiles.begin(); it != libFiles.end(); ++it){
+	for (std::vector<std::string>::iterator it = libFiles.begin(); it != libFiles.end(); ++it){
 		std::size_t ext = (it)->find_last_of(".");
 		if (strcmp((it)->substr(ext).c_str(), ".so") != 0){
 			std::cerr << "Error: lib should have a .so extension" << std::endl;
@@ -36,27 +36,38 @@ void    loadSharedLibs(std::list<std::string> & libFiles, std::list<void *> & li
 			std::cerr << "Error: " << dlerror() << std::endl;
 			exit(EXIT_FAILURE);
 		}
+		libHandles.push_back(dl_handle);
 	}
 }
 
-int     main(int argc, char **argv) {
-	std::list<std::string>  libFiles;
-	std::list<void *>       libHandles;
-	int                     foodValue = 1;
+Display *setActiveLib(void *handle, unsigned width, unsigned height, Snake* snake, Food* food)
+{
+	Display                 *(*activeLib)(unsigned, unsigned, Snake*, Food*);
 
-	checkArgv(argc, argv, libFiles, foodValue);
-	std::cout << "lib files size: " << libFiles.size() << std::endl;
-	std::cout << "food value: " << foodValue << std::endl;
-
-	loadSharedLibs(libFiles, libHandles);
-	return 0;
+	activeLib = (Display *(*)(unsigned, unsigned, Snake*, Food*)) dlsym(handle, "createDisplay");
+	if (!activeLib){
+		std::cerr << "Error: " << dlerror() << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	return activeLib(height, width, snake, food);
 }
 
-/*int main(int argc, char **argv) {
-	Snake			snake(windowWidth, windowHeight);
-	Food			food((argc == 3 && !strcmp(argv[1], "--food-value")) ? static_cast<unsigned>(atoi(argv[2])) : 1, {5, 9}, -1);
-	Display			*display = createDisplay(windowHeight, windowWidth, &snake, &food);
+void    destroyActiveLib(void *handle, Display *display)
+{
+	void                 (*activeLib)(Display*);
+
+	activeLib = (void (*)(Display*)) dlsym(handle, "destroyDisplay");
+	if (!activeLib){
+		std::cerr << "Error: " << dlerror() << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	activeLib(display);
+}
+
+void    gameLoop(Display *display, Snake & snake, Food  & food, int *option)
+{
 	unsigned		tick = 0;
+
 	bool 			paused = false;
 
 	std::random_device rd;
@@ -91,8 +102,27 @@ int     main(int argc, char **argv) {
 
 		std::this_thread::sleep_for(std::chrono::microseconds(16666));
 	}
+}
 
-	destroyDisplay(display);
+int     main(int argc, char **argv) {
+	std::vector<std::string>  libFiles;
+	std::vector<void *>       libHandles;
+	unsigned int            foodValue = 1;
+	Display                 *display;
+	int                     option = 0;
 
+	checkArgv(argc, argv, libFiles, foodValue);
+	std::cout << "lib files size: " << libFiles.size() << std::endl;
+	std::cout << "food value: " << foodValue << std::endl;
+
+	loadSharedLibs(libFiles, libHandles);
+	std::cout << "lib handles: " << libHandles.size() << std::endl;
+
+	Snake   snake(windowWidth, windowHeight);
+	Food    food(foodValue, {5, 9}, -1);
+	display = setActiveLib(libHandles[option], windowWidth, windowHeight, &snake, &food);
+
+	gameLoop(display, snake, food, &option);
+	destroyActiveLib(libHandles[option], display);
 	return 0;
-}*/
+}
