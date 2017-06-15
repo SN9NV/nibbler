@@ -1,6 +1,8 @@
 #include <thread>
 #include <random>
 #include <iostream>
+#include <list>
+#include <string>
 
 #include "Snake.hpp"
 #include "Display.hpp"
@@ -8,7 +10,27 @@
 const unsigned	windowWidth = 32;
 const unsigned	windowHeight = 32;
 
-int main(int argc, char **argv) {
+void    checkArgv(int argc, char **argv, std::list<std::string> & libFiles, int & foodValue)
+{
+	for(int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "--food-value") == 0)
+			foodValue = atoi(argv[++i]);
+		else if (strcmp(argv[i], "--lib") == 0)
+			libFiles.push_back(std::string(argv[++i]));
+	}
+}
+
+int     main(int argc, char **argv) {
+	std::list<std::string>   libFiles;
+	int                 foodValue = 1;
+
+	checkArgv(argc, argv, libFiles, foodValue);
+	std::cout << "lib files size: " << libFiles.size() << std::endl;
+	std::cout << "food value: " << foodValue << std::endl;
+	return 0;
+}
+
+/*int main(int argc, char **argv) {
 	Snake			snake(windowWidth, windowHeight);
 	Food			food((argc == 3 && !strcmp(argv[1], "--food-value")) ? static_cast<unsigned>(atoi(argv[2])) : 1, {5, 9}, -1);
 	Display			*display = createDisplay(windowHeight, windowWidth, &snake, &food);
@@ -51,4 +73,4 @@ int main(int argc, char **argv) {
 	destroyDisplay(display);
 
 	return 0;
-}
+}*/
