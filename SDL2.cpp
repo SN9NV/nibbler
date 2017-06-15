@@ -62,6 +62,12 @@ Display::Key SDL2::getKey() {
 				case SDLK_RIGHT:
 					this->_keyBuff.push(Display::Key::RIGHT);
 					return Display::Key::RIGHT;
+				case SDLK_1:
+					return Display::Key::ONE;
+				case SDLK_2:
+					return Display::Key::TWO;
+				case SDLK_3:
+					return Display::Key::THREE;
 				default:
 					return Display::Key::NONE;
 			}

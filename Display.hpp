@@ -18,7 +18,10 @@ public:
 		UP,
 		LEFT,
 		RIGHT,
-		QUIT
+		QUIT,
+		ONE,
+		TWO,
+		THREE
 	};
 
 	virtual void				draw(unsigned tick) = 0;

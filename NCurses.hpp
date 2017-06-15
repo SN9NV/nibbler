@@ -20,7 +20,10 @@ public:
 		DOWN	= 258,
 		UP		= 259,
 		LEFT	= 260,
-		RIGHT	= 261
+		RIGHT	= 261,
+		ONE     = 49,
+		TWO     = 50,
+		THREE   = 51
 	};
 
 private:

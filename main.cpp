@@ -64,7 +64,24 @@ void    destroyActiveLib(void *handle, Display *display)
 	activeLib(display);
 }
 
-void    gameLoop(Display *display, Snake & snake, Food  & food, int *option)
+Display *swicthDisplay(std::vector<void *> & libHandles, Display::Key key, Snake & snake, Food & food, int *option, Display *display)
+{
+	int     newOption = *option;
+
+	if (key == Display::Key::ONE)
+		newOption = 0;
+	else if (key == Display::Key::TWO)
+		newOption = 1;
+	else if (key == Display::Key::THREE)
+		newOption = 2;
+	if (newOption == *option || newOption > libHandles.size() - 1)
+		return display;
+	destroyActiveLib(libHandles[*option], display);
+	*option = newOption;
+	return setActiveLib(libHandles[*option], windowWidth, windowHeight, &snake, &food);
+}
+
+void    gameLoop(std::vector<void *> & libHandles, Display *display, Snake & snake, Food  & food, int *option)
 {
 	unsigned		tick = 0;
 
@@ -81,6 +98,8 @@ void    gameLoop(Display *display, Snake & snake, Food  & food, int *option)
 			paused = !paused;
 		else if (key == Display::Key::Q)
 			break;
+		else if (key == Display::Key::ONE || key == Display::Key::TWO || key == Display::Key::THREE)
+			display = swicthDisplay(libHandles, key, snake, food, option, display);
 
 		if (!paused) {
 			if (!(tick % 8)) {
@@ -122,7 +141,7 @@ int     main(int argc, char **argv) {
 	Food    food(foodValue, {5, 9}, -1);
 	display = setActiveLib(libHandles[option], windowWidth, windowHeight, &snake, &food);
 
-	gameLoop(display, snake, food, &option);
+	gameLoop(libHandles, display, snake, food, &option);
 	destroyActiveLib(libHandles[option], display);
 	return 0;
 }

@@ -61,6 +61,12 @@ Display::Key NCurses::getKey() {
 		case NCurses::Key::RIGHT:
 			this->_keyBuff.push(Display::Key::RIGHT);
 			return Display::Key::RIGHT;
+		case NCurses::Key::ONE:
+			return Display::Key::ONE;
+		case NCurses::Key::TWO:
+			return Display::Key::TWO;
+		case NCurses::Key::THREE:
+			return Display::Key::THREE;
 		default:
 			return Display::Key::NONE;
 	}
