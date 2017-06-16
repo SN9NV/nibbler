@@ -7,7 +7,7 @@ find_package(Curses REQUIRED)
 
 INCLUDE(FindPkgConfig)
 
-PKG_SEARCH_MODULE(SDL2 REQUIRED SDL2)
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
 include_directories(${CURSES_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS})
 link_directories(${SDL2_LIBRARY_DIRS})

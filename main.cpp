@@ -1,6 +1,7 @@
 #include <thread>
 #include <random>
 #include <iostream>
+#include <cstring>
 
 #include "Snake.hpp"
 #include "Display.hpp"

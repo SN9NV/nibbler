@@ -1,6 +1,8 @@
 #ifndef NIBBLER_MAIN_SDL2_HPP
 #define NIBBLER_MAIN_SDL2_HPP
 
+#include <stdexcept>
+
 #include "Display.hpp"
 #include "SDL.h"
 
