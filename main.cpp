@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 			break;
 
 		if (!paused) {
-			if (!(tick % 8)) {
+			if (!(tick % 4)) {
 				snake.setDirection(display->getInstruction());
 
 				if (snake.update())
