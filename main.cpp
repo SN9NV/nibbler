@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 			break;
 
 		if (!paused) {
-			if (!(tick % 4)) {
+			if (!(tick % 8) || key == Display::Key::SPACE) {
 				snake.setDirection(display->getInstruction());
 
 				if (snake.update())
@@ -36,7 +36,9 @@ int main(int argc, char **argv) {
 
 				if (snake.getHead() == food.pos) {
 					snake.eatFood(food.value);
-					food.pos = {randomWidth(gen), randomHeight(gen)};
+					do {
+						food.pos = { randomWidth(gen), randomHeight(gen) };
+					} while (snake == food.pos);
 				}
 
 				display->draw(tick);

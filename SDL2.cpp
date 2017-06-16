@@ -7,7 +7,7 @@ SDL2::SDL2(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food
 	}
 
 	this->_window = SDL_CreateWindow("Snek", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		this->_width, this->_height, SDL_WINDOW_SHOWN);
+		this->_width + SDL2::PIXEL_MULTIPLIER, this->_height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
 
 	if (this->_window == nullptr) {
 		throw std::runtime_error("Could not create SDL2 window");
@@ -44,6 +44,8 @@ Display::Key SDL2::getKey() {
 			return Display::Key::QUIT;
 		} else if (event.type == SDL_KEYDOWN && event.key.repeat == 0) {
 			switch(event.key.keysym.sym) {
+				case SDLK_SPACE:
+					return Display::Key::SPACE;
 				case SDLK_p:
 					return Display::Key::P;
 				case SDLK_q:
@@ -98,11 +100,6 @@ void SDL2::_drawSnake() {
 		it++;
 	}
 	SDL_RenderFillRects(this->_renderer, body, static_cast<int>(length));
-
-	/*delete head;
-	for (unsigned j = 0; j < length; j++) {
-		delete body[j];
-	}*/
 }
 
 void SDL2::_drawWalls() {
@@ -111,8 +108,8 @@ void SDL2::_drawWalls() {
 
 	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::WHITE.R, SDL2::Colours::WHITE.G, SDL2::Colours::WHITE.B, SDL2::Colours::WHITE.A);
 	SDL_Rect	background = {SDL2::PIXEL_MULTIPLIER, SDL2::PIXEL_MULTIPLIER,
-							  static_cast<int>(this->_width - SDL2::PIXEL_MULTIPLIER * 2),
-							  static_cast<int>(this->_height - SDL2::PIXEL_MULTIPLIER * 2)};
+							  static_cast<int>(this->_width - SDL2::PIXEL_MULTIPLIER),
+							  static_cast<int>(this->_height - SDL2::PIXEL_MULTIPLIER)};
 	SDL_RenderFillRect(this->_renderer, &background);
 }
 

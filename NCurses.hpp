@@ -14,6 +14,7 @@ public:
 
 	enum Key {
 		NONE	= 0,
+		SPACE	= 32,
 		P		= 112,
 		Q		= 113,
 		X		= 120,

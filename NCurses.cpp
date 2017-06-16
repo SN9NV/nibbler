@@ -4,8 +4,7 @@
 NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
 		Display(windowHeight, windowWidth, snake, food) {
 	initscr();
-	//raw();
-	cbreak();
+	raw();
 	nodelay(stdscr, true);
 	keypad(stdscr, true);
 	noecho();
@@ -43,6 +42,8 @@ void NCurses::draw(unsigned tick) {
 
 Display::Key NCurses::getKey() {
 	switch(getch()) {
+		case NCurses::Key::SPACE:
+			return Display::Key::SPACE;
 		case NCurses::Key::P:
 			return Display::Key::P;
 		case NCurses::Key::Q:
