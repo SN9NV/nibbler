@@ -35,6 +35,8 @@ public:
 	Snake::Direction				getDirection() const;
 	void 							eatFood(unsigned food);
 
+	bool	operator==(Snake::Point &point) const;
+
 private:
 	Snake() = delete;
 	Snake(const Snake &src) = delete;

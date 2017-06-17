@@ -24,9 +24,9 @@ bool Snake::update() {
 	if (head.x == 0 || head.y == 0 || head.x >= this->_window.x || head.y >= this->_window.y)
 		return true;
 
-	for (auto &piece : this->_pieces) {
-		if (head == piece)
-			return true;
+	for (unsigned i = 0; i < this->_pieces.size(); i++) {
+		if (head == this->_pieces[i])
+			this->_pieces.resize(i);
 	}
 
 	// Generate new head block in the current direction
@@ -95,4 +95,13 @@ const Snake::Point& Snake::getHead() const {
 
 Snake::Direction Snake::getDirection() const {
 	return this->_direction;
+}
+
+bool Snake::operator==(Snake::Point &point) const {
+	for (auto &piece : this->_pieces) {
+		if (point == piece)
+			return true;
+	}
+
+	return false;
 }
