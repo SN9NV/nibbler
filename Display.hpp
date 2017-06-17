@@ -1,15 +1,16 @@
 #ifndef NIBBLER_MAIN_DISPLAY_HPP
 #define NIBBLER_MAIN_DISPLAY_HPP
 
+#include "nibbler.hpp"
 #include "Snake.hpp"
 #include <queue>
 
 class Display {
 public:
-	Display(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
+	Display();
 	virtual ~Display();
 
-	enum Key {
+	enum	Key {
 		NONE,
 		SPACE,
 		P,
@@ -22,28 +23,25 @@ public:
 		QUIT
 	};
 
-	virtual void				draw(unsigned tick) = 0;
-	virtual Display::Key		getKey() = 0;
+	typedef	std::queue<Display::Key>	KeyQueue;
 
-	Snake::Direction			getInstruction();
-	std::queue<Display::Key>	&getKeyBuff();
+	virtual void			draw(unsigned tick) = 0;
+	virtual Display::Key	getKey() = 0;
+
+	Snake::Direction		getInstruction();
+	//Display::KeyQueue		&getKeyBuff();
 
 protected:
-	unsigned					_height;
-	unsigned					_width;
-	std::queue<Display::Key>	_keyBuff;
-
-	Snake						&_snake;
-	Food						&_food;
+	Display::KeyQueue		_keyBuff;
+	Nibbler::Env			_env;
 
 private:
-	Display() = delete;
 	Display(const Display &src) = delete;
 	Display &operator=(const Display &rhs) = delete;
 };
 
 extern "C" {
-	Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food);
+	Display		*createDisplay(Nibbler::Env env);
 	void		destroyDisplay(Display *display);
 }
 

@@ -6,7 +6,7 @@
 
 class NCurses : public Display {
 public:
-	NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
+	NCurses(Nibbler::env env);
 	virtual ~NCurses();
 
 	void				draw(unsigned tick);
@@ -33,11 +33,5 @@ private:
 	void			_drawWalls();
 	void			_drawFood();
 };
-
-extern "C" {
-	Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food);
-	void		destroyDisplay(Display *display);
-}
-
 
 #endif //NIBBLER_MAIN_NCURSES_HPP

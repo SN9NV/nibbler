@@ -3,12 +3,13 @@
 
 #include <stdexcept>
 
+#include "nibbler.hpp"
 #include "Display.hpp"
 #include "SDL.h"
 
 class SDL2 : public Display {
 public:
-	SDL2(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food);
+	SDL2(Nibbler::Env env);
 	virtual ~SDL2();
 
 	void				draw(unsigned tick);
@@ -21,12 +22,12 @@ public:
 		unsigned char	A;
 	};
 
-	typedef struct Colours {
-		static constexpr SDL2::Colour	WHITE = {0x00, 0x00, 0x00, 0xFF};
-		static constexpr SDL2::Colour	RED = {0xFF, 0x00, 0x00, 0xFF};
-		static constexpr SDL2::Colour	BLUE = {0x00, 0x00, 0xFF, 0xFF};
-		static constexpr SDL2::Colour	YELLOW = {0xFF, 0xFF, 0x00, 0xFF};
-		static constexpr SDL2::Colour	MAGENTA = {0x8B, 0x00, 0x8B, 0xFF};
+	static typedef struct Colours {
+		static constexpr SDL2::Colour	WHITE = { 0x00, 0x00, 0x00, 0xFF };
+		static constexpr SDL2::Colour	RED = { 0xFF, 0x00, 0x00, 0xFF };
+		static constexpr SDL2::Colour	BLUE = { 0x00, 0x00, 0xFF, 0xFF };
+		static constexpr SDL2::Colour	YELLOW = { 0xFF, 0xFF, 0x00, 0xFF };
+		static constexpr SDL2::Colour	MAGENTA = { 0x8B, 0x00, 0x8B, 0xFF };
 	} Colours;
 
 	static constexpr unsigned PIXEL_MULTIPLIER = 16;

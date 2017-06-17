@@ -1,13 +1,17 @@
 #include "SDL2.hpp"
+#include "nibbler.hpp"
 
-SDL2::SDL2(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
-		Display(windowHeight * SDL2::PIXEL_MULTIPLIER, windowWidth * SDL2::PIXEL_MULTIPLIER, snake, food) {
+SDL2::SDL2(Nibbler::Env env) {
+	this->_env = env;
+	this->_env.window.width *= SDL2::PIXEL_MULTIPLIER;
+	this->_env.window.height *= SDL2::PIXEL_MULTIPLIER;
+
 	if (SDL_Init(SDL_INIT_VIDEO)) {
 		throw std::runtime_error("Could not init video");
 	}
 
 	this->_window = SDL_CreateWindow("Snek", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		this->_width + SDL2::PIXEL_MULTIPLIER, this->_height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
+		this->_env.window.width + SDL2::PIXEL_MULTIPLIER, this->_env.window.height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
 
 	if (this->_window == nullptr) {
 		throw std::runtime_error("Could not create SDL2 window");
@@ -83,7 +87,7 @@ SDL_Rect	createPixel(unsigned x, unsigned y) {
 }
 
 void SDL2::_drawSnake() {
-	auto pieces = this->_snake.getPieces();
+	auto pieces = this->_env.snake->getPieces();
 	auto it = pieces.begin();
 	auto length = pieces.size() - 1;
 
@@ -108,19 +112,19 @@ void SDL2::_drawWalls() {
 
 	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::WHITE.R, SDL2::Colours::WHITE.G, SDL2::Colours::WHITE.B, SDL2::Colours::WHITE.A);
 	SDL_Rect	background = {SDL2::PIXEL_MULTIPLIER, SDL2::PIXEL_MULTIPLIER,
-							  static_cast<int>(this->_width - SDL2::PIXEL_MULTIPLIER),
-							  static_cast<int>(this->_height - SDL2::PIXEL_MULTIPLIER)};
+							  static_cast<int>(this->_env.window.width - SDL2::PIXEL_MULTIPLIER),
+							  static_cast<int>(this->_env.window.height - SDL2::PIXEL_MULTIPLIER)};
 	SDL_RenderFillRect(this->_renderer, &background);
 }
 
 void SDL2::_drawFood() {
 	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::MAGENTA.R, SDL2::Colours::MAGENTA.G, SDL2::Colours::MAGENTA.B, SDL2::Colours::MAGENTA.A);
-	SDL_Rect	food = createPixel(this->_food.pos.x, this->_food.pos.y);
+	SDL_Rect	food = createPixel(this->_env.food->pos.x, this->_env.food->pos.y);
 	SDL_RenderFillRect(this->_renderer, &food);
 }
 
-Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food) {
-	return new SDL2(windowHeight, windowWidth, *snake, *food);
+Display		*createDisplay(Nibbler::Env &env) {
+	return new SDL2(env);
 }
 
 void		destroyDisplay(Display *display) {

@@ -1,8 +1,8 @@
-#include <iostream>
 #include "NCurses.hpp"
 
-NCurses::NCurses(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
-		Display(windowHeight, windowWidth, snake, food) {
+NCurses::NCurses(Nibbler::env env) {
+	this->_env = env;
+
 	initscr();
 	raw();
 	nodelay(stdscr, true);
@@ -28,8 +28,8 @@ void NCurses::draw(unsigned tick) {
 	clear();
 	mvprintw(y - 1, 0, "%8d", tick);
 
-	if (static_cast<unsigned>(y) < this->_height || static_cast<unsigned>(x) < this->_width * 2) {
-		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_height, this->_width * 2);
+	if (static_cast<unsigned>(y) < this->_env.window.height || static_cast<unsigned>(x) < this->_env.window.width * 2) {
+		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_env.window.height, this->_env.window.width * 2);
 		mvprintw(y - 1, x - 7, "%3d %3d", x, y);
 	} else {
 		this->_drawWalls();
@@ -73,7 +73,7 @@ void	drawPixel(unsigned y, unsigned x, chtype print) {
 }
 
 void NCurses::_drawSnake() {
-	auto pieces = this->_snake.getPieces();
+	auto pieces = this->_env.snake->getPieces();
 	auto it = pieces.begin();
 
 	attron(COLOR_PAIR(COLOR_RED));
@@ -90,27 +90,27 @@ void NCurses::_drawSnake() {
 
 void NCurses::_drawWalls() {
 	attron(COLOR_PAIR(COLOR_BLUE));
-	for (unsigned i = 0; i <= this->_width; i++) {
+	for (unsigned i = 0; i <= this->_env.window.width; i++) {
 		drawPixel(0, i, ACS_CKBOARD);
-		drawPixel(this->_height, i, ACS_CKBOARD);
+		drawPixel(this->_env.window.height, i, ACS_CKBOARD);
 	}
 
-	for (unsigned i = 0; i < this->_height; i++) {
+	for (unsigned i = 0; i < this->_env.window.height; i++) {
 		drawPixel(i, 0, ACS_CKBOARD);
-		drawPixel(i, this->_width, ACS_CKBOARD);
+		drawPixel(i, this->_env.window.width, ACS_CKBOARD);
 	}
 	attroff(COLOR_PAIR(COLOR_BLUE));
 }
 
 void NCurses::_drawFood() {
 	attron(COLOR_PAIR(COLOR_MAGENTA));
-	mvaddch(this->_food.pos.y, this->_food.pos.x * 2, 'O');
-	mvaddch(this->_food.pos.y, this->_food.pos.x * 2 + 1, '~');
+	mvaddch(this->_env.food->pos.y, this->_env.food->pos.x * 2, 'O');
+	mvaddch(this->_env.food->pos.y, this->_env.food->pos.x * 2 + 1, '~');
 	attroff(COLOR_PAIR(COLOR_MAGENTA));
 }
 
-Display		*createDisplay(unsigned windowHeight, unsigned windowWidth, Snake *snake, Food *food) {
-	return new NCurses(windowHeight, windowWidth, *snake, *food);
+Display		*createDisplay(Nibbler::env env) {
+	return new NCurses(env);
 }
 
 void		destroyDisplay(Display *display) {
