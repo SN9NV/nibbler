@@ -1,10 +1,6 @@
 #include "nibbler.hpp"
 #include "Display.hpp"
 
-bool Nibbler::Point::operator==(const Nibbler::Point &p2) const {
-	return (this->x == p2.x && this->y == p2.y);
-}
-
 Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 	Switches	switches = { 1, false, false };
 
