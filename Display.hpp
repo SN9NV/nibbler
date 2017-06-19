@@ -33,7 +33,7 @@ public:
 
 protected:
 	Display::KeyQueue		_keyBuff;
-	Nibbler::Env			_env;
+	Env			_env;
 
 private:
 	Display(const Display &src) = delete;

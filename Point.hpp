@@ -12,9 +12,9 @@ namespace Nibbler {
 		Point(const Nibbler::Point &src);
 		~Point();
 
-		Nibbler::Point	&operator=(const Point &rhs);
+		Nibbler::Point	&operator=(const Nibbler::Point &rhs);
 
-		bool	operator==(const Point &p2) const;
+		bool	operator==(const Nibbler::Point &p2) const;
 	};
 }
 

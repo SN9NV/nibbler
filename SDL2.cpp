@@ -1,6 +1,6 @@
 #include "SDL2.hpp"
 
-SDL2::SDL2(Nibbler::Env env) {
+SDL2::SDL2(Env &env) {
 	this->_env = env;
 	this->_env.window.width *= SDL2::PIXEL_MULTIPLIER;
 	this->_env.window.height *= SDL2::PIXEL_MULTIPLIER;
@@ -122,7 +122,7 @@ void SDL2::_drawFood() {
 	SDL_RenderFillRect(this->_renderer, &food);
 }
 
-Display		*createDisplay(Nibbler::Env &env) {
+Display		*createDisplay(Env &env) {
 	return new SDL2(env);
 }
 

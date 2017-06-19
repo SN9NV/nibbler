@@ -30,7 +30,7 @@ void Nibbler::gameLoop(Nibbler::Switches &switches) {
 	std::uniform_int_distribution<unsigned> randomHeight(1, Nibbler::DefaultWindow::height - 1);
 	std::uniform_int_distribution<unsigned> randomWidth(1, Nibbler::DefaultWindow::width - 1);
 
-	Nibbler::Env	env = { switches, NULL, NULL, {  } };
+	Env	env = { switches, NULL, NULL, {  } };
 	env.snake	= new Snake(env);
 	env.food	= new Food(env.switches.foodValue, { randomWidth(gen), randomHeight(gen) }, -1);
 	Display			*display = createDisplay(env);

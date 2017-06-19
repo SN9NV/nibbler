@@ -1,6 +1,6 @@
 #include "Snake.hpp"
 
-Snake::Snake(Nibbler::Env &env) : _env(env) {
+Snake::Snake(Env &env) : _env(env) {
 	this->_pieces.push_back({
 		this->_env.window.width / 2,
 		this->_env.window.height / 2

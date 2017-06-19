@@ -9,7 +9,7 @@
 
 class SDL2 : public Display {
 public:
-	SDL2(Nibbler::Env env);
+	SDL2(Env &env);
 	virtual ~SDL2();
 
 	void				draw(unsigned tick);
