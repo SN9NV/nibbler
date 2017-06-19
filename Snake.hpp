@@ -4,9 +4,7 @@
 #include "nibbler.hpp"
 #include <deque>
 
-namespace Nibbler {
-	typedef struct env Env;
-}
+typedef struct env Env;
 
 class Snake {
 public:
@@ -20,7 +18,7 @@ public:
 		LEFT
 	};
 
-	Snake(Nibbler::Env &env);
+	Snake(Env &env);
 	virtual ~Snake();
 
 	bool					update();
@@ -42,7 +40,7 @@ private:
 	Snake::body			_pieces;
 	Snake::Direction	_direction;
 	unsigned			_foodLeft;
-	Nibbler::Env		&_env;
+	Env		&_env;
 };
 
 #endif //NIBBLER_MAIN_SNAKE_HPP

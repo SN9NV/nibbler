@@ -22,7 +22,7 @@ public:
 		unsigned char	A;
 	};
 
-	static typedef struct Colours {
+	typedef struct Colours {
 		static constexpr SDL2::Colour	WHITE = { 0x00, 0x00, 0x00, 0xFF };
 		static constexpr SDL2::Colour	RED = { 0xFF, 0x00, 0x00, 0xFF };
 		static constexpr SDL2::Colour	BLUE = { 0x00, 0x00, 0xFF, 0xFF };

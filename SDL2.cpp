@@ -1,5 +1,4 @@
 #include "SDL2.hpp"
-#include "nibbler.hpp"
 
 SDL2::SDL2(Nibbler::Env env) {
 	this->_env = env;

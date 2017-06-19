@@ -33,19 +33,20 @@ namespace Nibbler {
 		bool 		eatSelf;
 		bool 		warp;
 
+		switches() {}
 		switches(unsigned foodValue, bool eatSelf, bool warpThroughWalls) :
 			foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls) {}
 	} Switches;
 
-	typedef struct	env {
-		Nibbler::Switches	switches;
-		class Snake			*snake;
-		Nibbler::Food		*food;
-		Nibbler::Window		window;
-	} Env;
-
 	Nibbler::Switches	setSwitches(int argc, char **argv);
 	void				gameLoop(Nibbler::Switches &switches);
 };
+
+typedef struct	env {
+	Nibbler::Switches	switches;
+	class Snake			*snake;
+	Nibbler::Food		*food;
+	Nibbler::Window		window;
+} Env;
 
 #endif //NIBBLER_MAIN_NIBBLER_HPP

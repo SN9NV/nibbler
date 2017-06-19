@@ -41,7 +41,7 @@ private:
 };
 
 extern "C" {
-	Display		*createDisplay(Nibbler::Env env);
+	Display		*createDisplay(Env &env);
 	void		destroyDisplay(Display *display);
 }
 
