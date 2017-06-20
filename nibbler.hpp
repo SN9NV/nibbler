@@ -5,9 +5,13 @@
 #include <random>
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <dlfcn.h>
 
 #include "Point.hpp"
 #include "Snake.hpp"
+
+class Snake;
 
 namespace Nibbler {
 	typedef struct	food {
@@ -32,19 +36,22 @@ namespace Nibbler {
 		unsigned	foodValue;
 		bool 		eatSelf;
 		bool 		warp;
+		unsigned                libIndex;
+		std::vector<void *>     handles;
 
 		switches() {}
 		switches(unsigned foodValue, bool eatSelf, bool warpThroughWalls) :
-			foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls) {}
+				foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls), libIndex(0) , handles(){}
 	} Switches;
 
 	Nibbler::Switches	setSwitches(int argc, char **argv);
 	void				gameLoop(Nibbler::Switches &switches);
+	void                loadSharedLibs(char *filename, std::vector<void *> & libHandles);
 };
 
 typedef struct	env {
 	Nibbler::Switches	switches;
-	class Snake			*snake;
+	Snake				*snake;
 	Nibbler::Food		*food;
 	Nibbler::Window		window;
 } Env;

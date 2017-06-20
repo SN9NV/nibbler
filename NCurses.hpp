@@ -6,7 +6,7 @@
 
 class NCurses : public Display {
 public:
-	NCurses(Nibbler::env env);
+	NCurses(Env &env);
 	virtual ~NCurses();
 
 	void				draw(unsigned tick);
