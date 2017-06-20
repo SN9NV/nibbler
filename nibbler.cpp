@@ -14,6 +14,14 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 		} else if (!std::strcmp(argv[i], "--warp")) {
 			switches.eatSelf = false;
 			switches.warp = true;
+		} else if (!std::strcmp(argv[i], "--help")) {
+			std::cout << argv[0] << "\n"
+						<< "    --food-value { INT }    Multiplier on food value\n"
+						<< "    --eat-self              Game doesn't end if you eat yourself. Body just gets smaller\n"
+						<< "    --warp                  Game doesn't end if you collide with a wall. You warp to the other side\n"
+						<< "warp and eat-self are complimentary. Only one can be set. the last one is taken\n";
+
+			exit(0);
 		}
 	}
 
@@ -26,7 +34,7 @@ void Nibbler::gameLoop(Nibbler::Switches &switches) {
 	std::uniform_int_distribution<unsigned> randomHeight(1, Nibbler::DefaultWindow::height - 1);
 	std::uniform_int_distribution<unsigned> randomWidth(1, Nibbler::DefaultWindow::width - 1);
 
-	Env	env = { switches, NULL, NULL, {  } };
+	Env	env = { switches, NULL, NULL, { Nibbler::DefaultWindow::height, Nibbler::DefaultWindow::width } };
 	env.snake	= new Snake(env);
 	env.food	= new Food(env.switches.foodValue, { randomWidth(gen), randomHeight(gen) }, -1);
 	Display			*display = createDisplay(env);

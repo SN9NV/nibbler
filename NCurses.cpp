@@ -1,6 +1,6 @@
 #include "NCurses.hpp"
 
-NCurses::NCurses(Nibbler::env env) {
+NCurses::NCurses(Env &env) {
 	this->_env = env;
 
 	initscr();
@@ -109,11 +109,11 @@ void NCurses::_drawFood() {
 	attroff(COLOR_PAIR(COLOR_MAGENTA));
 }
 
-Display		*createDisplay(Nibbler::env env) {
+Display		*createDisplay(Env &env) {
 	return new NCurses(env);
 }
 
 void		destroyDisplay(Display *display) {
 	if (display != nullptr)
-	delete display;
+		delete display;
 }

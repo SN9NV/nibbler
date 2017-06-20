@@ -19,9 +19,10 @@ set(SOURCE_FILES
 		nibbler.cpp nibbler.hpp
         Snake.cpp Snake.hpp
         Display.cpp Display.hpp
-#        NCurses.cpp NCurses.hpp
+#		NCurses.cpp NCurses.hpp
 		SDL2.cpp SDL2.hpp
-		nibbler.hpp nibbler.cpp Point.cpp Point.hpp)
+		nibbler.hpp nibbler.cpp
+		Point.cpp Point.hpp)
 
 add_executable(nibbler-main ${SOURCE_FILES})
 target_link_libraries(nibbler-main ${CURSES_LIBRARIES} ${SDL2_LIBRARIES})

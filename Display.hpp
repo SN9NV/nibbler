@@ -32,8 +32,8 @@ public:
 	//Display::KeyQueue		&getKeyBuff();
 
 protected:
-	Display::KeyQueue		_keyBuff;
-	Env			_env;
+	Display::KeyQueue	_keyBuff;
+	Env					_env;
 
 private:
 	Display(const Display &src) = delete;

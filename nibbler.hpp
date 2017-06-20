@@ -9,6 +9,8 @@
 #include "Point.hpp"
 #include "Snake.hpp"
 
+class Snake;
+
 namespace Nibbler {
 	typedef struct	food {
 		unsigned		value;
@@ -44,7 +46,7 @@ namespace Nibbler {
 
 typedef struct	env {
 	Nibbler::Switches	switches;
-	class Snake			*snake;
+	Snake				*snake;
 	Nibbler::Food		*food;
 	Nibbler::Window		window;
 } Env;
