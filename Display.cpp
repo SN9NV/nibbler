@@ -1,14 +1,10 @@
 #include "Display.hpp"
 
-Display::Display(unsigned windowHeight, unsigned windowWidth, Snake &snake, Food &food) :
-		_height(windowHeight),
-		_width(windowWidth),
-		_snake(snake),
-		_food(food) {}
+Display::Display() {}
 
 Display::~Display() {}
 
-Snake::Direction Display::getInstruction() {
+Snake::Direction	Display::getInstruction() {
 	if (this->_keyBuff.empty())
 		return Snake::Direction::NONE;
 
@@ -26,6 +22,7 @@ Snake::Direction Display::getInstruction() {
 	return direction;
 }
 
-std::queue<Display::Key> &Display::getKeyBuff() {
+/*
+Display::KeyQueue	&Display::getKeyBuff() {
 	return this->_keyBuff;
-}
+}*/

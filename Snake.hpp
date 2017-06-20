@@ -1,21 +1,14 @@
 #ifndef NIBBLER_MAIN_SNAKE_HPP
 #define NIBBLER_MAIN_SNAKE_HPP
 
+#include "nibbler.hpp"
 #include <deque>
+
+typedef struct env Env;
 
 class Snake {
 public:
-	struct	Point {
-		unsigned	x;
-		unsigned	y;
-
-		Point() {};
-		Point(unsigned x, unsigned y) : x(x), y(y) {};
-
-		bool operator==(const Snake::Point &p2) const {
-			return (this->x == p2.x && this->y == p2.y);
-		}
-	};
+	typedef	std::deque<Nibbler::Point>	body;
 
 	enum	Direction {
 		NONE,
@@ -25,37 +18,29 @@ public:
 		LEFT
 	};
 
-	Snake(unsigned windowWidth, unsigned windowHeight);
+	Snake(Env &env);
 	virtual ~Snake();
 
-	bool							update();
-	void							setDirection(Snake::Direction direction);
-	const std::deque<Snake::Point>	&getPieces() const;
-	const Snake::Point				&getHead() const;
-	Snake::Direction				getDirection() const;
-	void 							eatFood(unsigned food);
+	bool					update();
+	void					setDirection(Snake::Direction direction);
+	const Snake::body		&getPieces() const;
+	const Nibbler::Point	&getHead() const;
+	Snake::Direction		getDirection() const;
+	void 					eatFood(unsigned food);
 
-	bool	operator==(Snake::Point &point) const;
+	bool	operator==(Nibbler::Point &point) const;
 
 private:
 	Snake() = delete;
 	Snake(const Snake &src) = delete;
 	Snake &operator=(const Snake &rhs) = delete;
 
-	Snake::Point				_getNewHeadPos();
+	Nibbler::Point		_getNewHeadPos();
 
-	std::deque<Snake::Point>	_pieces;
-	Snake::Direction			_direction;
-	unsigned					_foodLeft;
-	Point						_window;
-};
-
-struct	Food {
-	unsigned		value;
-	Snake::Point	pos;
-	int				life;
-
-	Food(unsigned value, Snake::Point point, int life) : value(value), pos(point), life(life) {}
+	Snake::body			_pieces;
+	Snake::Direction	_direction;
+	unsigned			_foodLeft;
+	Env		&_env;
 };
 
 #endif //NIBBLER_MAIN_SNAKE_HPP
