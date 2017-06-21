@@ -5,7 +5,9 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 	Switches	switches = { 1, false, false };
 
 	for (int i = 1; i < argc; i++) {
-		if (!std::strcmp(argv[i], "--food-value")) {
+		if (std::atoi(argv[i]) && argv[i + 1] && std::atoi(argv[i + 1])) {
+
+		} else if (!std::strcmp(argv[i], "--food-value")) {
 			if (argc > i)
 				switches.foodValue = static_cast<unsigned>(atoi(argv[++i]));
 		} else if (!std::strcmp(argv[i], "--eat-self")) {
@@ -14,11 +16,15 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 		} else if (!std::strcmp(argv[i], "--warp")) {
 			switches.eatSelf = false;
 			switches.warp = true;
+		} else if (!std::strcmp(argv[i], "--infinite-snake")) {
+			switches.eatSelf = true;
+			switches.warp = true;
 		} else if (!std::strcmp(argv[i], "--help")) {
-			std::cout << argv[0] << "\n"
+			std::cout << argv[0] << " [(window width) (window height)]\n"
 						<< "    --food-value { INT }    Multiplier on food value\n"
 						<< "    --eat-self              Game doesn't end if you eat yourself. Body just gets smaller\n"
 						<< "    --warp                  Game doesn't end if you collide with a wall. You warp to the other side\n"
+						<< "    --infinite-snake        turns on eat-self and warp. So the game never ends\n"
 						<< "warp and eat-self are complimentary. Only one can be set. the last one is taken\n";
 
 			exit(0);
@@ -34,9 +40,20 @@ void Nibbler::gameLoop(Nibbler::Switches &switches) {
 	std::uniform_int_distribution<unsigned> randomHeight(1, Nibbler::DefaultWindow::height - 1);
 	std::uniform_int_distribution<unsigned> randomWidth(1, Nibbler::DefaultWindow::width - 1);
 
-	Env	env = { switches, NULL, NULL, { Nibbler::DefaultWindow::height, Nibbler::DefaultWindow::width } };
+	Env	env = {
+		switches,
+		NULL,
+		NULL,
+		{
+			Nibbler::DefaultWindow::height,
+			Nibbler::DefaultWindow::width
+		},
+		NULL
+	};
+
 	env.snake	= new Snake(env);
 	env.food	= new Food(env.switches.foodValue, { randomWidth(gen), randomHeight(gen) }, -1);
+	env.score	= new unsigned(0);
 	Display			*display = createDisplay(env);
 	unsigned		tick = 0;
 	bool 			paused = false;
@@ -60,6 +77,8 @@ void Nibbler::gameLoop(Nibbler::Switches &switches) {
 					do {
 						env.food->pos = { randomWidth(gen), randomHeight(gen) };
 					} while (*env.snake == env.food->pos);
+
+
 				}
 
 				display->draw(tick);

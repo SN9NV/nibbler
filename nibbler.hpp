@@ -31,24 +31,28 @@ namespace Nibbler {
 	} Window;
 
 	typedef struct	switches {
-		unsigned	foodValue;
-		bool 		eatSelf;
-		bool 		warp;
+		unsigned		foodValue;
+		bool 			eatSelf;
+		bool 			warp;
+		Nibbler::Window	window;
 
 		switches() {}
-		switches(unsigned foodValue, bool eatSelf, bool warpThroughWalls) :
-			foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls) {}
+		switches(unsigned foodValue, bool eatSelf, bool warpThroughWalls, Nibbler::Window window) :
+			foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls), window(window) {}
 	} Switches;
 
 	Nibbler::Switches	setSwitches(int argc, char **argv);
 	void				gameLoop(Nibbler::Switches &switches);
 };
 
+typedef std::uniform_int_distribution<unsigned> randomDistribution;
+
 typedef struct	env {
 	Nibbler::Switches	switches;
 	Snake				*snake;
 	Nibbler::Food		*food;
 	Nibbler::Window		window;
+	unsigned			*score;
 } Env;
 
 #endif //NIBBLER_MAIN_NIBBLER_HPP
