@@ -120,10 +120,7 @@ void        destroyDisplay(void *handle, Display *display){
 Display     *switchDisplay(Display *display, Env & env, Nibbler::switches & switches, Display::Key key){
 	unsigned    newOption;
 
-	if (key == Display::Key::ONE)
-		newOption = 0;
-	else
-		newOption = (key == Display::Key::TWO) ? 1 : 2;
+	newOption = key - Display::Key::ONE;
 	if (newOption == switches.libIndex || newOption >= switches.handles.size())
 		return display;
 	destroyDisplay(switches.handles[switches.libIndex], display);
