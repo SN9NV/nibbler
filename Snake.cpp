@@ -1,10 +1,10 @@
 #include "Snake.hpp"
 
-Snake::Snake(unsigned windowWidth, unsigned windowHeight) : _window(windowWidth, windowHeight) {
-	unsigned w = windowWidth / 2;
-	unsigned h = windowHeight / 2;
-
-	this->_pieces.push_back({w, h});
+Snake::Snake(Env &env) : _env(env) {
+	this->_pieces.push_back({
+		this->_env.window.width / 2,
+		this->_env.window.height / 2
+	});
 
 	this->_direction = Snake::Direction::RIGHT;
 	this->_foodLeft = 4;
@@ -19,14 +19,31 @@ bool Snake::update() {
 	else
 		this->_pieces.pop_back();
 
-	Snake::Point head = this->_getNewHeadPos();
+	Nibbler::Point head = this->_getNewHeadPos();
 
-	if (head.x == 0 || head.y == 0 || head.x >= this->_window.x || head.y >= this->_window.y)
-		return true;
-
-	for (auto &piece : this->_pieces) {
-		if (head == piece)
+	if (head.x == 0 || head.y == 0 || head.x == this->_env.window.width || head.y == this->_env.window.height) {
+		if (this->_env.switches.warp) {
+			if (head.x == 0)
+				head.x = this->_env.window.width - 1;
+			else if (head.y == 0)
+				head.y = this->_env.window.height - 1;
+			else if (head.x == this->_env.window.width)
+				head.x = 1;
+			else
+				head.y = 1;
+		} else {
 			return true;
+		}
+	}
+
+	for (unsigned i = 0; i < this->_pieces.size(); i++) {
+		if (head == this->_pieces[i]) {
+			if (this->_env.switches.eatSelf) {
+				this->_pieces.resize(i);
+			} else {
+				return true;
+			}
+		}
 	}
 
 	// Generate new head block in the current direction
@@ -35,8 +52,8 @@ bool Snake::update() {
 	return false;
 }
 
-Snake::Point Snake::_getNewHeadPos() {
-	Snake::Point	newHead = this->_pieces[0];
+Nibbler::Point Snake::_getNewHeadPos() {
+	Nibbler::Point	newHead = this->_pieces[0];
 
 	switch (this->_direction) {
 		case Snake::Direction::UP:
@@ -85,14 +102,23 @@ void Snake::eatFood(unsigned food){
 	this->_foodLeft += food;
 }
 
-const std::deque<Snake::Point>& Snake::getPieces() const {
+const Snake::body &Snake::getPieces() const {
 	return this->_pieces;
 }
 
-const Snake::Point& Snake::getHead() const {
+const Nibbler::Point &Snake::getHead() const {
 	return this->_pieces[0];
 }
 
 Snake::Direction Snake::getDirection() const {
 	return this->_direction;
+}
+
+bool Snake::operator==(Nibbler::Point &point) const {
+	for (auto &piece : this->_pieces) {
+		if (point == piece)
+			return true;
+	}
+
+	return false;
 }

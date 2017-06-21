@@ -1,26 +1,39 @@
-cmake_minimum_required(VERSION 3.5.1)
-project(nibbler-main)
 
-set(CMAKE_CXX_STANDARD 14)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5.1)
+PROJECT(nibbler-main)
 
-find_package(Curses REQUIRED)
+SET(CMAKE_CXX_STANDARD 14)
 
-INCLUDE(FindPkgConfig)
+FIND_PACKAGE(Curses REQUIRED)
 
-PKG_SEARCH_MODULE(SDL2 REQUIRED SDL2)
+FIND_PACKAGE(SDL2)
+IF (NOT SDL2_FOUND)
+    MESSAGE(STATUS "+++ Installing SDL2")
+    IF (APPLE)
+        EXECUTE_PROCESS(COMMAND brew install sdl2)
+    ENDIF()
+ENDIF()
+MESSAGE(STATUS "+++ SDL2 READY")
 
-include_directories(${CURSES_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS})
-link_directories(${SDL2_LIBRARY_DIRS})
+INCLUDE_DIRECTORIES(${CURSES_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS})
+LINK_DIRECTORIES(${SDL2_LIBRARY_DIRS})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+SET(NCURSES_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp NCurses.cpp)
+ADD_LIBRARY(libCurses SHARED ${NCURSES_SOURCE_FILES})
+SET_TARGET_PROPERTIES(libCurses PROPERTIES PREFIX "" SUFFIX ".so")
+TARGET_LINK_LIBRARIES(libCurses ${CURSES_LIBRARIES})
 
-set(SOURCE_FILES
-        main.cpp
-        Snake.cpp Snake.hpp
-        Display.cpp Display.hpp
-#        NCurses.cpp NCurses.hpp
-		SDL2.cpp SDL2.hpp
-)
+SET(NCURSES_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp NCurses2.cpp)
+ADD_LIBRARY(libCurses2 SHARED ${NCURSES_SOURCE_FILES})
+SET_TARGET_PROPERTIES(libCurses2 PROPERTIES PREFIX "" SUFFIX ".so")
+TARGET_LINK_LIBRARIES(libCurses2 ${CURSES_LIBRARIES})
 
-add_executable(nibbler-main ${SOURCE_FILES})
-target_link_libraries(nibbler-main ${CURSES_LIBRARIES} ${SDL2_LIBRARIES})
+SET(SDL2_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp SDL2.cpp)
+ADD_LIBRARY(libSdl2 SHARED ${SDL2_SOURCE_FILES})
+SET_TARGET_PROPERTIES(libSdl2 PROPERTIES PREFIX "" SUFFIX ".so")
+TARGET_LINK_LIBRARIES(libSdl2 ${SDL2_LIBRARIES})
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+SET(SOURCE_FILES main.cpp nibbler.cpp Display.cpp Point.cpp Snake.cpp)
+ADD_EXECUTABLE(nibbler-main ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(nibbler-main ${CURSES_LIBRARIES})

@@ -11,10 +11,10 @@ NCurses::NCurses(Env &env) {
 	curs_set(false);
 
 	start_color();
-	init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
-	init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
-	init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
-	init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(COLOR_RED, COLOR_BLUE, COLOR_BLACK);
+	init_pair(COLOR_YELLOW, COLOR_RED, COLOR_BLACK);
+	init_pair(COLOR_BLUE, COLOR_GREEN, COLOR_BLACK);
+	init_pair(COLOR_MAGENTA, COLOR_CYAN, COLOR_BLACK);
 }
 
 NCurses::~NCurses() {
