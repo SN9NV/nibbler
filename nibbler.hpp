@@ -14,6 +14,9 @@
 class Snake;
 
 namespace Nibbler {
+	typedef std::vector<void *>						HandleVector;
+	typedef std::uniform_int_distribution<unsigned>	UniformDistribution;
+
 	typedef struct	food {
 		unsigned		value;
 		Nibbler::Point	pos;
@@ -33,20 +36,27 @@ namespace Nibbler {
 	} Window;
 
 	typedef struct	switches {
-		unsigned	foodValue;
-		bool 		eatSelf;
-		bool 		warp;
-		unsigned                libIndex;
-		std::vector<void *>     handles;
+		unsigned		foodValue;
+		bool 			eatSelf;
+		bool 			warp;
+		unsigned		windowWidth;
+		unsigned		windowHeight;
+		unsigned		libIndex;
+		Nibbler::HandleVector	handles;
 
-		switches() {}
-		switches(unsigned foodValue, bool eatSelf, bool warpThroughWalls) :
-				foodValue(foodValue), eatSelf(eatSelf), warp(warpThroughWalls), libIndex(0) , handles(){}
+		switches() :
+			foodValue(1),
+			eatSelf(false),
+			warp(false),
+			windowWidth(Nibbler::DefaultWindow::width),
+			windowHeight(Nibbler::DefaultWindow::height),
+			libIndex(0),
+			handles() {}
 	} Switches;
 
 	Nibbler::Switches	setSwitches(int argc, char **argv);
 	void				gameLoop(Nibbler::Switches &switches);
-	void                loadSharedLibs(char *filename, std::vector<void *> & libHandles);
+	void                loadSharedLibs(const char *filename, Nibbler::HandleVector &libHandles);
 };
 
 typedef struct	env {
