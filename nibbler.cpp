@@ -30,6 +30,9 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 		} else if (!std::strcmp(argv[i], "--warp")) {
 			switches.eatSelf = false;
 			switches.warp = true;
+		} else if (!std::strcmp(argv[i], "--infinite-snake")) {
+			switches.eatSelf = true;
+			switches.warp = true;
 		} else if (!std::strcmp(argv[i], "--lib") && argv[i + 1] != NULL) {
 			if (std::strcmp(argv[i + 1] + std::strlen(argv[i + 1]) - 3, ".so") != 0) {
 				std::cerr << "Require library with format [libname].so" << std::endl;
@@ -85,13 +88,15 @@ void		Nibbler::gameLoop(Nibbler::Switches &switches) {
 
 	while (true) {
 		Display::Key key = display->getKey();
-		if (key == Display::Key::P)
+		if (key == Display::Key::P) {
 			paused = !paused;
-		else if (key == Display::Key::Q)
+		} else if (key == Display::Key::Q) {
 			break;
-		else if (key == Display::Key::ONE || key == Display::Key::TWO || key == Display::Key::THREE) {
+		} else if (key == Display::Key::ONE || key == Display::Key::TWO || key == Display::Key::THREE) {
 			display = switchDisplay(display, env, switches, key);
 			paused = true;
+		} else if (key >= Display::Key::DOWN && key <= Display::Key::RIGHT) {
+			paused = false;
 		}
 
 		if (!paused) {

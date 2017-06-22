@@ -7,7 +7,7 @@ Snake::Snake(Env &env) : _env(env) {
 	});
 
 	this->_direction = Snake::Direction::RIGHT;
-	this->_foodLeft = 4;
+	this->_foodLeft = 3;
 }
 
 Snake::~Snake() {}

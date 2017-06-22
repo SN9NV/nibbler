@@ -27,7 +27,8 @@ SDL2::~SDL2() {
 	SDL_DestroyRenderer(this->_renderer);
 	SDL_DestroyWindow(this->_window);
 
-	SDL_Quit();
+	this->_renderer = nullptr;
+	this->_window = nullptr;
 }
 
 void SDL2::draw(unsigned tick) {
@@ -103,8 +104,12 @@ void SDL2::_drawSnake() {
 	SDL_RenderFillRect(this->_renderer, &head);
 	it++;
 
-	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::YELLOW.R, SDL2::Colours::YELLOW.G, SDL2::Colours::YELLOW.B, SDL2::Colours::YELLOW.A);
 	for (unsigned i = 0; i < length; i++) {
+		SDL_SetRenderDrawColor(this->_renderer,
+								SDL2::Colours::YELLOW.R,
+								SDL2::Colours::YELLOW.G,
+								SDL2::Colours::YELLOW.B,
+								SDL2::Colours::YELLOW.A);
 		body[i] = createPixel(it->x, it->y);
 		it++;
 	}
@@ -129,7 +134,10 @@ void SDL2::_drawFood() {
 }
 
 Display		*createDisplay(Env &env) {
-	return new SDL2(env);
+	Display *newDisplay = new SDL2(env);
+
+	newDisplay->draw(0);
+	return newDisplay;
 }
 
 void		destroyDisplay(Display *display) {

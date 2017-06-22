@@ -116,7 +116,10 @@ void NCurses::_drawFood() {
 }
 
 Display		*createDisplay(Env &env) {
-	return new NCurses(env);
+	Display *newDisplay = new NCurses(env);
+
+	newDisplay->draw(0);
+	return newDisplay;
 }
 
 void		destroyDisplay(Display *display) {
