@@ -22,6 +22,10 @@ Snake::Direction	Display::getInstruction() {
 	return direction;
 }
 
+unsigned Display::_score() {
+	return (*this->_env.score + this->_env.snake->size()) * 10;
+}
+
 /*
 Display::KeyQueue	&Display::getKeyBuff() {
 	return this->_keyBuff;

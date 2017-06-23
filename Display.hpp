@@ -28,7 +28,7 @@ public:
 
 	typedef	std::queue<Display::Key>	KeyQueue;
 
-	virtual void			draw(unsigned tick) = 0;
+	virtual void			draw() = 0;
 	virtual Display::Key	getKey() = 0;
 
 	Snake::Direction		getInstruction();
@@ -37,6 +37,8 @@ public:
 protected:
 	Display::KeyQueue	_keyBuff;
 	Env					_env;
+
+	unsigned			_score();
 
 private:
 	Display(const Display &src) = delete;

@@ -12,23 +12,25 @@ public:
 	SDL2(Env &env);
 	virtual ~SDL2();
 
-	void				draw(unsigned tick);
+	void				draw();
 	Display::Key		getKey();
 
-	struct Colour {
+	typedef struct Colour {
 		unsigned char	R;
 		unsigned char	G;
 		unsigned char	B;
 		unsigned char	A;
+	} Colour;
+
+	struct Colours {
+		static SDL2::Colour	BLACK;
+		static SDL2::Colour	RED;
+		static SDL2::Colour	BLUE;
+		static SDL2::Colour	YELLOW;
+		static SDL2::Colour	MAGENTA;
 	};
 
-	typedef struct Colours {
-		static constexpr SDL2::Colour	WHITE	= { 0x00, 0x00, 0x00, 0xFF };
-		static constexpr SDL2::Colour	RED		= { 0xFF, 0x00, 0x00, 0xFF };
-		static constexpr SDL2::Colour	BLUE	= { 0x00, 0x00, 0xFF, 0xFF };
-		static constexpr SDL2::Colour	YELLOW	= { 0xFF, 0xFF, 0x00, 0xFF };
-		static constexpr SDL2::Colour	MAGENTA	= { 0x8B, 0x00, 0x8B, 0xFF };
-	} Colours;
+	int		SDL_SetRenderDrawColor(const SDL2::Colour colour);
 
 	static constexpr unsigned PIXEL_MULTIPLIER = 16;
 

@@ -26,6 +26,7 @@ public:
 	const Snake::body		&getPieces() const;
 	const Nibbler::Point	&getHead() const;
 	Snake::Direction		getDirection() const;
+	unsigned				size() const;
 	void 					eatFood(unsigned food);
 
 	bool	operator==(Nibbler::Point &point) const;

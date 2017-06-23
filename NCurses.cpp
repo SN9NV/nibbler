@@ -21,20 +21,21 @@ NCurses::~NCurses() {
 	endwin();
 }
 
-void NCurses::draw(unsigned tick) {
+void NCurses::draw() {
 	int x, y;
 
 	getmaxyx(stdscr, y, x);
 	clear();
-	mvprintw(y - 1, 0, "%8d", tick);
 
-	if (static_cast<unsigned>(y) < this->_env.window.height || static_cast<unsigned>(x) < this->_env.window.width * 2) {
-		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_env.window.height, this->_env.window.width * 2);
+	if (static_cast<unsigned>(y) < this->_env.switches.window.height || static_cast<unsigned>(x) < this->_env.switches.window.width * 2) {
+		mvprintw(0, 0, "Window needs to be at least %d chars high and %d chars long", this->_env.switches.window.height, this->_env.switches.window.width * 2);
 		mvprintw(y - 1, x - 7, "%3d %3d", x, y);
 	} else {
 		this->_drawWalls();
 		this->_drawSnake();
 		this->_drawFood();
+
+		mvprintw(y - 1, 0, "Score: %6d", this->_score());
 	}
 
 	refresh();
@@ -96,14 +97,14 @@ void NCurses::_drawSnake() {
 
 void NCurses::_drawWalls() {
 	attron(COLOR_PAIR(COLOR_BLUE));
-	for (unsigned i = 0; i <= this->_env.window.width; i++) {
+	for (unsigned i = 0; i <= this->_env.switches.window.width; i++) {
 		drawPixel(0, i, ACS_CKBOARD);
-		drawPixel(this->_env.window.height, i, ACS_CKBOARD);
+		drawPixel(this->_env.switches.window.height, i, ACS_CKBOARD);
 	}
 
-	for (unsigned i = 0; i < this->_env.window.height; i++) {
+	for (unsigned i = 0; i < this->_env.switches.window.height; i++) {
 		drawPixel(i, 0, ACS_CKBOARD);
-		drawPixel(i, this->_env.window.width, ACS_CKBOARD);
+		drawPixel(i, this->_env.switches.window.width, ACS_CKBOARD);
 	}
 	attroff(COLOR_PAIR(COLOR_BLUE));
 }
@@ -118,7 +119,7 @@ void NCurses::_drawFood() {
 Display		*createDisplay(Env &env) {
 	Display *newDisplay = new NCurses(env);
 
-	newDisplay->draw(0);
+	newDisplay->draw();
 	return newDisplay;
 }
 

@@ -1,16 +1,22 @@
 #include "SDL2.hpp"
 
+SDL2::Colour SDL2::Colours::BLACK = { 0x00, 0x00, 0x00, 0xFF };
+SDL2::Colour SDL2::Colours::RED = { 0xFF, 0x00, 0x00, 0xFF };
+SDL2::Colour SDL2::Colours::BLUE = { 0x00, 0x00, 0xFF, 0xFF };
+SDL2::Colour SDL2::Colours::YELLOW = { 0xFF, 0xFF, 0x00, 0xFF };
+SDL2::Colour SDL2::Colours::MAGENTA = { 0x8B, 0x00, 0x8B, 0xFF };
+
 SDL2::SDL2(Env &env) {
 	this->_env = env;
-	this->_env.window.width *= SDL2::PIXEL_MULTIPLIER;
-	this->_env.window.height *= SDL2::PIXEL_MULTIPLIER;
+	this->_env.switches.window.width *= SDL2::PIXEL_MULTIPLIER;
+	this->_env.switches.window.height *= SDL2::PIXEL_MULTIPLIER;
 
 	if (SDL_Init(SDL_INIT_VIDEO)) {
 		throw std::runtime_error("Could not init video");
 	}
 
 	this->_window = SDL_CreateWindow("Snek", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		this->_env.window.width + SDL2::PIXEL_MULTIPLIER, this->_env.window.height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
+		this->_env.switches.window.width + SDL2::PIXEL_MULTIPLIER, this->_env.switches.window.height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
 
 	if (this->_window == nullptr) {
 		throw std::runtime_error("Could not create SDL2 window");
@@ -31,8 +37,7 @@ SDL2::~SDL2() {
 	this->_window = nullptr;
 }
 
-void SDL2::draw(unsigned tick) {
-	(void)tick;
+void SDL2::draw() {
 	this->_drawWalls(); //No clear because drawWalls clears the screen
 	this->_drawSnake();
 	this->_drawFood();
@@ -99,17 +104,13 @@ void SDL2::_drawSnake() {
 
 	SDL_Rect	body[length];
 
-	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::RED.R, SDL2::Colours::RED.G, SDL2::Colours::RED.B, SDL2::Colours::RED.A);
+	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::RED);
 	SDL_Rect	head = createPixel(it->x, it->y);
 	SDL_RenderFillRect(this->_renderer, &head);
 	it++;
 
 	for (unsigned i = 0; i < length; i++) {
-		SDL_SetRenderDrawColor(this->_renderer,
-								SDL2::Colours::YELLOW.R,
-								SDL2::Colours::YELLOW.G,
-								SDL2::Colours::YELLOW.B,
-								SDL2::Colours::YELLOW.A);
+		SDL2::SDL_SetRenderDrawColor(SDL2::Colours::YELLOW);
 		body[i] = createPixel(it->x, it->y);
 		it++;
 	}
@@ -117,26 +118,30 @@ void SDL2::_drawSnake() {
 }
 
 void SDL2::_drawWalls() {
-	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::BLUE.R, SDL2::Colours::BLUE.G, SDL2::Colours::BLUE.B, SDL2::Colours::BLUE.A);
+	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::BLUE);
 	SDL_RenderClear(this->_renderer);
 
-	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::WHITE.R, SDL2::Colours::WHITE.G, SDL2::Colours::WHITE.B, SDL2::Colours::WHITE.A);
+	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::BLACK);
 	SDL_Rect	background = {SDL2::PIXEL_MULTIPLIER, SDL2::PIXEL_MULTIPLIER,
-							  static_cast<int>(this->_env.window.width - SDL2::PIXEL_MULTIPLIER),
-							  static_cast<int>(this->_env.window.height - SDL2::PIXEL_MULTIPLIER)};
+							  static_cast<int>(this->_env.switches.window.width - SDL2::PIXEL_MULTIPLIER),
+							  static_cast<int>(this->_env.switches.window.height - SDL2::PIXEL_MULTIPLIER)};
 	SDL_RenderFillRect(this->_renderer, &background);
 }
 
 void SDL2::_drawFood() {
-	SDL_SetRenderDrawColor(this->_renderer, SDL2::Colours::MAGENTA.R, SDL2::Colours::MAGENTA.G, SDL2::Colours::MAGENTA.B, SDL2::Colours::MAGENTA.A);
+	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::MAGENTA);
 	SDL_Rect	food = createPixel(this->_env.food->pos.x, this->_env.food->pos.y);
 	SDL_RenderFillRect(this->_renderer, &food);
+}
+
+int SDL2::SDL_SetRenderDrawColor(struct SDL2::Colour colour) {
+	return ::SDL_SetRenderDrawColor(this->_renderer, colour.R, colour.G, colour.B, colour.A);
 }
 
 Display		*createDisplay(Env &env) {
 	Display *newDisplay = new SDL2(env);
 
-	newDisplay->draw(0);
+	newDisplay->draw();
 	return newDisplay;
 }
 

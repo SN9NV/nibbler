@@ -10,15 +10,17 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 
 	for (int i = 1; i < argc; i++) {
 		if (!std::strcmp(argv[i], "-w")) {
-			switches.windowWidth = static_cast<unsigned>(atoi(argv[++i]));
-			if (!switches.windowWidth) {
-				switches.windowWidth = Nibbler::DefaultWindow::width;
+			switches.window.width = static_cast<unsigned>(atoi(argv[++i]));
+			if (!switches.window.width) {
+				switches.window.width = Nibbler::DefaultWindow::width;
 				i--;
+			} else {
+				std::cout << "Window width set: " << switches.window.width << "\n";
 			}
 		} else if (!std::strcmp(argv[i], "-h")) {
-			switches.windowHeight = static_cast<unsigned>(atoi(argv[++i]));
-			if (!switches.windowHeight) {
-				switches.windowHeight = Nibbler::DefaultWindow::height;
+			switches.window.height = static_cast<unsigned>(atoi(argv[++i]));
+			if (!switches.window.height) {
+				switches.window.height = Nibbler::DefaultWindow::height;
 				i--;
 			}
 		} else if (!std::strcmp(argv[i], "--food-value")) {
@@ -76,12 +78,13 @@ void		Nibbler::loadSharedLibs(const char *filename, Nibbler::HandleVector &libHa
 void		Nibbler::gameLoop(Nibbler::Switches &switches) {
 	std::random_device	rd;
 	std::mt19937		gen(rd());
-	UniformDistribution	randomHeight(1, Nibbler::DefaultWindow::height - 1);
-	UniformDistribution	randomWidth(1, Nibbler::DefaultWindow::width - 1);
+	UniformDistribution	randomHeight(1, switches.window.height - 1);
+	UniformDistribution	randomWidth(1, switches.window.width - 1);
 
-	Env	env = { switches, NULL, NULL, { Nibbler::DefaultWindow::height, Nibbler::DefaultWindow::width } };
+	Env	env = { switches, NULL, NULL, NULL };
 	env.snake	= new Snake(env);
 	env.food	= new Food(env.switches.foodValue, { randomWidth(gen), randomHeight(gen) }, -1);
+	env.score	= new unsigned(0);
 	Display		*display = getActiveDisplay(switches.handles[switches.libIndex], env);
 	unsigned	tick = 0;
 	bool 		paused = false;
@@ -108,12 +111,14 @@ void		Nibbler::gameLoop(Nibbler::Switches &switches) {
 
 				if (env.snake->getHead() == env.food->pos) {
 					env.snake->eatFood(env.food->value);
+					*env.score += env.food->value;
+
 					do {
 						env.food->pos = { randomWidth(gen), randomHeight(gen) };
 					} while (*env.snake == env.food->pos);
 				}
 
-				display->draw(tick);
+				display->draw();
 			}
 
 			tick++;

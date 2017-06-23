@@ -39,8 +39,7 @@ namespace Nibbler {
 		unsigned		foodValue;
 		bool 			eatSelf;
 		bool 			warp;
-		unsigned		windowWidth;
-		unsigned		windowHeight;
+		Nibbler::Window	window;
 		unsigned		libIndex;
 		Nibbler::HandleVector	handles;
 
@@ -48,8 +47,6 @@ namespace Nibbler {
 			foodValue(1),
 			eatSelf(false),
 			warp(false),
-			windowWidth(Nibbler::DefaultWindow::width),
-			windowHeight(Nibbler::DefaultWindow::height),
 			libIndex(0),
 			handles() {}
 	} Switches;
@@ -63,7 +60,7 @@ typedef struct	env {
 	Nibbler::Switches	switches;
 	Snake				*snake;
 	Nibbler::Food		*food;
-	Nibbler::Window		window;
+	unsigned			*score;
 } Env;
 
 #endif //NIBBLER_MAIN_NIBBLER_HPP

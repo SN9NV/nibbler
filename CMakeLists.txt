@@ -1,4 +1,3 @@
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5.1)
 PROJECT(nibbler-main)
 
@@ -18,22 +17,46 @@ MESSAGE(STATUS "+++ SDL2 READY")
 INCLUDE_DIRECTORIES(${CURSES_INCLUDE_DIR} ${SDL2_INCLUDE_DIRS})
 LINK_DIRECTORIES(${SDL2_LIBRARY_DIRS})
 
-SET(NCURSES_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp NCurses.cpp)
+SET(NCURSES_SOURCE_FILES
+        nibbler.cpp     nibbler.hpp
+        Point.cpp       Point.hpp
+        Snake.cpp       Snake.hpp
+        Display.cpp     Display.hpp
+        NCurses.cpp     NCurses.hpp
+)
 ADD_LIBRARY(libCurses SHARED ${NCURSES_SOURCE_FILES})
 SET_TARGET_PROPERTIES(libCurses PROPERTIES PREFIX "" SUFFIX ".so")
 TARGET_LINK_LIBRARIES(libCurses ${CURSES_LIBRARIES})
 
-SET(NCURSES_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp NCurses2.cpp)
-ADD_LIBRARY(libCurses2 SHARED ${NCURSES_SOURCE_FILES})
+SET(NCURSES2_SOURCE_FILES
+        nibbler.cpp     nibbler.hpp
+        Point.cpp       Point.hpp
+        Snake.cpp       Snake.hpp
+        Display.cpp     Display.hpp
+        NCurses2.cpp    NCurses.hpp
+)
+ADD_LIBRARY(libCurses2 SHARED ${NCURSES2_SOURCE_FILES})
 SET_TARGET_PROPERTIES(libCurses2 PROPERTIES PREFIX "" SUFFIX ".so")
 TARGET_LINK_LIBRARIES(libCurses2 ${CURSES_LIBRARIES})
 
-SET(SDL2_SOURCE_FILES nibbler.cpp Point.cpp Snake.cpp Display.cpp SDL2.cpp)
+SET(SDL2_SOURCE_FILES
+		nibbler.cpp		nibbler.hpp
+		Point.cpp		Point.hpp
+		Snake.cpp		Snake.hpp
+		Display.cpp		Display.hpp
+		SDL2.cpp		SDL2.hpp
+)
 ADD_LIBRARY(libSdl2 SHARED ${SDL2_SOURCE_FILES})
 SET_TARGET_PROPERTIES(libSdl2 PROPERTIES PREFIX "" SUFFIX ".so")
 TARGET_LINK_LIBRARIES(libSdl2 ${SDL2_LIBRARIES})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-SET(SOURCE_FILES main.cpp nibbler.cpp Display.cpp Point.cpp Snake.cpp)
+SET(SOURCE_FILES
+		main.cpp
+		nibbler.cpp		nibbler.hpp
+		Display.cpp		Display.hpp
+		Point.cpp		Point.hpp
+		Snake.cpp		Snake.hpp
+)
 ADD_EXECUTABLE(nibbler-main ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(nibbler-main ${CURSES_LIBRARIES})

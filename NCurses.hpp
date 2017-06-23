@@ -9,7 +9,7 @@ public:
 	NCurses(Env &env);
 	virtual ~NCurses();
 
-	void				draw(unsigned tick);
+	void				draw();
 	Display::Key		getKey();
 
 	enum Key {

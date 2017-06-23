@@ -2,8 +2,8 @@
 
 Snake::Snake(Env &env) : _env(env) {
 	this->_pieces.push_back({
-		this->_env.window.width / 2,
-		this->_env.window.height / 2
+		this->_env.switches.window.width / 2,
+		this->_env.switches.window.height / 2
 	});
 
 	this->_direction = Snake::Direction::RIGHT;
@@ -21,13 +21,13 @@ bool Snake::update() {
 
 	Nibbler::Point head = this->_getNewHeadPos();
 
-	if (head.x == 0 || head.y == 0 || head.x == this->_env.window.width || head.y == this->_env.window.height) {
+	if (head.x == 0 || head.y == 0 || head.x == this->_env.switches.window.width || head.y == this->_env.switches.window.height) {
 		if (this->_env.switches.warp) {
 			if (head.x == 0)
-				head.x = this->_env.window.width - 1;
+				head.x = this->_env.switches.window.width - 1;
 			else if (head.y == 0)
-				head.y = this->_env.window.height - 1;
-			else if (head.x == this->_env.window.width)
+				head.y = this->_env.switches.window.height - 1;
+			else if (head.x == this->_env.switches.window.width)
 				head.x = 1;
 			else
 				head.y = 1;
@@ -121,4 +121,8 @@ bool Snake::operator==(Nibbler::Point &point) const {
 	}
 
 	return false;
+}
+
+unsigned Snake::size() const {
+	return this->_pieces.size();
 }
