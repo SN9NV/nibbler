@@ -33,7 +33,7 @@ SDL2::SDL2(Env &env) {
 		throw std::runtime_error("Could not create renderer");
 	}
 
-	this->_font = TTF_OpenFont("../UbuntuMono-R.ttf", SDL2::PIXEL_MULTIPLIER);
+	this->_font = TTF_OpenFont("/System/Library/Fonts/Monaco.dfont", SDL2::PIXEL_MULTIPLIER);
 
 	if (this->_font == nullptr) {
 		throw std::runtime_error("Could not open font");
