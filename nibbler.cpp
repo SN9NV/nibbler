@@ -8,6 +8,8 @@ Display		*switchDisplay(Display *display, Env &env, Nibbler::switches &switches,
 Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 	Switches	switches;
 
+	switches.window = { Nibbler::DefaultWindow::height, Nibbler::DefaultWindow::width };
+
 	for (int i = 1; i < argc; i++) {
 		if (!std::strcmp(argv[i], "-w")) {
 			switches.window.width = static_cast<unsigned>(atoi(argv[++i]));
