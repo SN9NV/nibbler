@@ -32,13 +32,12 @@ public:
 	virtual Display::Key	getKey() = 0;
 
 	Snake::Direction		getInstruction();
+	unsigned				score() const;
 	//Display::KeyQueue		&getKeyBuff();
 
 protected:
 	Display::KeyQueue	_keyBuff;
 	Env					_env;
-
-	unsigned			_score();
 
 private:
 	Display(const Display &src) = delete;

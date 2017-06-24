@@ -22,7 +22,7 @@ Snake::Direction	Display::getInstruction() {
 	return direction;
 }
 
-unsigned Display::_score() {
+unsigned Display::score() const {
 	return (*this->_env.score + this->_env.snake->size()) * 10;
 }
 

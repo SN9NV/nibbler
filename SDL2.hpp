@@ -6,6 +6,7 @@
 #include "nibbler.hpp"
 #include "Display.hpp"
 #include "SDL.h"
+#include "SDL_ttf.h"
 
 class SDL2 : public Display {
 public:
@@ -23,6 +24,7 @@ public:
 	} Colour;
 
 	struct Colours {
+		static SDL2::Colour	WHITE;
 		static SDL2::Colour	BLACK;
 		static SDL2::Colour	RED;
 		static SDL2::Colour	BLUE;
@@ -42,9 +44,11 @@ private:
 	void			_drawSnake();
 	void			_drawWalls();
 	void			_drawFood();
+	void			_drawScore();
 
 	SDL_Window		*_window;
 	SDL_Renderer	*_renderer;
+	TTF_Font		*_font;
 };
 
 

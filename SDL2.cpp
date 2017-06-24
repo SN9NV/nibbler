@@ -1,5 +1,6 @@
 #include "SDL2.hpp"
 
+SDL2::Colour SDL2::Colours::WHITE = { 0xFF, 0xFF, 0xFF, 0xFF };
 SDL2::Colour SDL2::Colours::BLACK = { 0x00, 0x00, 0x00, 0xFF };
 SDL2::Colour SDL2::Colours::RED = { 0xFF, 0x00, 0x00, 0xFF };
 SDL2::Colour SDL2::Colours::BLUE = { 0x00, 0x00, 0xFF, 0xFF };
@@ -15,6 +16,10 @@ SDL2::SDL2(Env &env) {
 		throw std::runtime_error("Could not init video");
 	}
 
+	if (TTF_Init()) {
+		throw std::runtime_error("Could not init font");
+	}
+
 	this->_window = SDL_CreateWindow("Snek", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		this->_env.switches.window.width + SDL2::PIXEL_MULTIPLIER, this->_env.switches.window.height + SDL2::PIXEL_MULTIPLIER, SDL_WINDOW_SHOWN);
 
@@ -27,20 +32,29 @@ SDL2::SDL2(Env &env) {
 	if (this->_renderer == nullptr) {
 		throw std::runtime_error("Could not create renderer");
 	}
+
+	this->_font = TTF_OpenFont("../UbuntuMono-R.ttf", SDL2::PIXEL_MULTIPLIER);
+
+	if (this->_font == nullptr) {
+		throw std::runtime_error("Could not open font");
+	}
 }
 
 SDL2::~SDL2() {
 	SDL_DestroyRenderer(this->_renderer);
 	SDL_DestroyWindow(this->_window);
+	TTF_CloseFont(this->_font);
 
 	this->_renderer = nullptr;
 	this->_window = nullptr;
+	this->_font = nullptr;
 }
 
 void SDL2::draw() {
 	this->_drawWalls(); //No clear because drawWalls clears the screen
 	this->_drawSnake();
 	this->_drawFood();
+	this->_drawScore();
 
 	SDL_RenderPresent(this->_renderer);
 }
@@ -132,6 +146,23 @@ void SDL2::_drawFood() {
 	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::MAGENTA);
 	SDL_Rect	food = createPixel(this->_env.food->pos.x, this->_env.food->pos.y);
 	SDL_RenderFillRect(this->_renderer, &food);
+}
+
+void SDL2::_drawScore() {
+	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::WHITE);
+
+	std::string		score = std::to_string(this->score());
+
+	// SDL_Surface *TTF_RenderText_Blended(TTF_Font *font, const char *text, SDL_Color fg);
+	SDL_Surface		*scoreText = TTF_RenderText_Blended(this->_font, score.c_str(), { 0xFF, 0xFF, 0xFF });
+	SDL_Texture		*scoreTexture = SDL_CreateTextureFromSurface(this->_renderer, scoreText);
+
+	SDL_Rect	position = { 0, 0, scoreText->w, scoreText->h };
+
+	SDL_RenderCopy(this->_renderer, scoreTexture, NULL, &position);
+
+	SDL_FreeSurface(scoreText);
+	SDL_DestroyTexture(scoreTexture);
 }
 
 int SDL2::SDL_SetRenderDrawColor(struct SDL2::Colour colour) {

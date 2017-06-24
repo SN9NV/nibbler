@@ -14,8 +14,6 @@ Nibbler::Switches	Nibbler::setSwitches(int argc, char **argv) {
 			if (!switches.window.width) {
 				switches.window.width = Nibbler::DefaultWindow::width;
 				i--;
-			} else {
-				std::cout << "Window width set: " << switches.window.width << "\n";
 			}
 		} else if (!std::strcmp(argv[i], "-h")) {
 			switches.window.height = static_cast<unsigned>(atoi(argv[++i]));
@@ -127,7 +125,11 @@ void		Nibbler::gameLoop(Nibbler::Switches &switches) {
 		std::this_thread::sleep_for(std::chrono::microseconds(16666));
 	}
 
+	unsigned score = display->score();
+
 	destroyDisplay(switches.handles[switches.libIndex], display);
+
+	std::cout << "Your score: " << score << std::endl;
 }
 
 Display		*getActiveDisplay(void *handle, Env & env) {
