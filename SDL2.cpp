@@ -151,9 +151,8 @@ void SDL2::_drawFood() {
 void SDL2::_drawScore() {
 	SDL2::SDL_SetRenderDrawColor(SDL2::Colours::WHITE);
 
-	std::string		score = std::to_string(this->score());
+	std::string		score = "Score: " + std::to_string(this->score());
 
-	// SDL_Surface *TTF_RenderText_Blended(TTF_Font *font, const char *text, SDL_Color fg);
 	SDL_Surface		*scoreText = TTF_RenderText_Blended(this->_font, score.c_str(), { 0xFF, 0xFF, 0xFF });
 	SDL_Texture		*scoreTexture = SDL_CreateTextureFromSurface(this->_renderer, scoreText);
 

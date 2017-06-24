@@ -157,9 +157,8 @@ void		destroyDisplay(void *handle, Display *display) {
 }
 
 Display		*switchDisplay(Display *display, Env &env, Nibbler::switches &switches, Display::Key key) {
-	unsigned	newOption;
+	unsigned	newOption = key - Display::Key::ONE;
 
-	newOption = key - Display::Key::ONE;
 	if (newOption == switches.libIndex || newOption >= switches.handles.size())
 		return display;
 	destroyDisplay(switches.handles[switches.libIndex], display);
