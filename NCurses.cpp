@@ -35,7 +35,7 @@ void NCurses::draw() {
 		this->_drawSnake();
 		this->_drawFood();
 
-		mvprintw(y - 1, 0, "Score: %6d", this->score());
+		mvprintw(0, 0, "Score: %d", this->score());
 	}
 
 	refresh();
